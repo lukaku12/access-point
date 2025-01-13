@@ -1,32 +1,24 @@
 <template>
-  <div class="app">
-    <nav><router-link to="/">Dashboard</router-link> |</nav>
+  <div class="font-sans antialiased text-center text-gray-700 mt-14">
+    <nav class="p-8 flex justify-center items-center gap-4">
+      <router-link 
+        v-for="route in navigationRoutes" 
+        :key="route.path"
+        :to="route.path"
+        class="font-bold text-gray-700 no-underline hover:text-emerald-600 transition-colors"
+        :class="{ 'text-emerald-500': $route.path === route.path }"
+      >
+        <span v-if="route.icon" class="mr-1">{{ route.icon }}</span>
+        {{ route.name }}
+        <span v-if="route !== navigationRoutes[navigationRoutes.length - 1]">|</span>
+      </router-link>
+    </nav>
     <router-view />
   </div>
 </template>
 
-<style>
-.app {
-  font-family: Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<script setup lang="ts">
+import { useNavigation } from './composables/useNavigation'
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-  text-decoration: none;
-  margin: 0 10px;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+const { navigationRoutes } = useNavigation()
+</script>
