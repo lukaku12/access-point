@@ -3,7 +3,7 @@ import {
   createWebHistory,
   type RouteRecordRaw
 } from 'vue-router';
-import Dashboard from '@/views/Dashboard.vue';
+import DashboardView from '@/views/DashboardView.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: Dashboard
+    component: DashboardView
   }
 ];
 
