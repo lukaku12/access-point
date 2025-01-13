@@ -1,13 +1,14 @@
 import axios, { type AxiosError } from 'axios';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const baseURL = "/api";
 
 const axiosInstance = axios.create({
   baseURL,
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
-  },
+    'X-Auth-Key': '1234567890987654321'
+  }
 });
 
 // Add a request interceptor

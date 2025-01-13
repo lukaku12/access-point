@@ -5,33 +5,34 @@ interface NavLink {
     icon?: string;
 }
 
-const isActive = (path: string) => {
-    return window.location.pathname.includes(path.toLowerCase());
-};
-
-const dashboardNavLinks : NavLink[] = [
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Cards', path: '/cards' },
-    { name: 'Card Reads', path: '/card-reads' },
-    { name: 'WiFi', path: '/wifi' },
-    { name: 'Config', path: '/config' }
+const dashboardNavLinks: NavLink[] = [
+    { name: 'dashboard', path: '/dashboard' },
+    { name: 'cards', path: '/cards' },
+    { name: 'card-reads', path: '/card-reads' },
+    { name: 'wifi', path: '/wifi' },
+    { name: 'config', path: '/config' }
 ];
 
+defineProps<{
+    activeRoute: string;
+}>();
 </script>
 
 <template>
-    <div class="bg-blue-600 text-white rounded-lg shadow-md p-6 mb-6">
-        <nav class="flex gap-4 mb-6 justify-center">
-            <router-link v-for="link in dashboardNavLinks" :key="link.path" :to="link.path"
-                class="px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-white"
-                :class="{ 'bg-blue-700': isActive(link.path) }">
-                <span v-if="link.icon" class="mr-1">{{ link.icon }}</span>
-                {{ link.name }}
+    <nav class="bg-blue-600 text-white p-4 rounded-lg mb-8">
+        <div class="flex gap-4 justify-center mb-4 ">
+            <router-link v-for="link in dashboardNavLinks" :key="link.path" :to="link.path" :class="[
+                'px-4 py-2 rounded-lg transition-colors',
+                activeRoute === link.name
+                    ? 'bg-blue-700 text-white'
+                    : 'hover:bg-blue-500'
+            ]">
+                {{ link.name.charAt(0).toUpperCase() + link.name.slice(1) }}
             </router-link>
-        </nav>
-        <div class="text-center">
-            <slot name="header">
-            </slot>
+
         </div>
-    </div>
+        <div class="mb-4 text-center">
+            <slot name="header"></slot>
+        </div>
+    </nav>
 </template>

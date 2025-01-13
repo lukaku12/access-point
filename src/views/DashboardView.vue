@@ -1,166 +1,277 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { getDashboardStats } from '@/api/dashboard';
-import type { DashboardStats, SystemInfo } from '@/types/dashboard';
-import NavBar from '@/components/NavBar.vue';
+import type { DashboardApiResponse } from '@/types/dashboard';
+import DashboardCard from '@/components/DashboardCard.vue';
 
-const stats = ref<DashboardStats>({
-  wifi_rssi: 0,
-  uptime: 0,
-  free_heap: '0',
-  heap_used_percentage: 0,
-  littlefs_used: '0',
-  storage_percentage: 0,
-  total_cards: 0,
-  card_reads_today: 0,
-  total_card_reads: 0,
-  current_datetime: '',
-  time_source: '',
-  timezone: '',
-  using_fallback_time: false,
-  has_valid_time: false,
-  total_wifi_credentials: 0
+const stats = ref<DashboardApiResponse>({
+    api_version: '',
+    status: '',
+    wifi: {
+        rssi: 0,
+        strength: 0,
+        ssid: '',
+        ip: '',
+        mac: ''
+    },
+    system: {
+        cpu_freq: 0,
+        uptime: '',
+        timestamp: 0
+    },
+    heap: {
+        free: '',
+        total: '',
+        minimum: '',
+        usage_percent: 0
+    },
+    storage: {
+        flash: {
+            size: '',
+            speed: ''
+        },
+        filesystem: {
+            total: '',
+            used: '',
+            free: '',
+            usage_percent: 0
+        }
+    },
+    database: {
+        cards: {
+            total: 0,
+            active: 0,
+            inactive: 0,
+            active_percent: 0,
+        },
+        reads: {
+            today: 0,
+            total: 0,
+        }
+    }
 });
 
 const lastUpdate = ref('Just now');
-const systemInfo = ref<SystemInfo>({
-  chipId: 'ESP32-XXXXX',
-  wifiIp: '192.168.1.100',
-  firmwareVersion: '1.0.0',
-  totalHeap: '512KB',
-  minFreeHeap: '128KB',
-  flashSize: '4MB',
-  flashSpeed: 80,
-  littlefsTotal: '2MB'
-});
-
 const isLoading = ref(false);
+const initialLoading = ref(true); // Add this new ref
 const error = ref<string | null>(null);
+const isVisible = ref(true);
 
 let statsInterval: number | NodeJS.Timeout;
 
 const updateStats = async () => {
-  try {
-    isLoading.value = true;
-    error.value = null;
-    const { data } = await getDashboardStats();
-    stats.value = data;
-    lastUpdate.value = new Date().toLocaleTimeString();
-  } catch (err: any) {
-    error.value = err.message || 'Failed to fetch stats';
-  } finally {
-    isLoading.value = false;
-  }
+    try {
+        isLoading.value = true;
+        error.value = null;
+        const { data } = await getDashboardStats();
+        stats.value = data;
+        lastUpdate.value = new Date().toLocaleTimeString();
+    } catch (err: any) {
+        error.value = err.message || 'Failed to fetch stats';
+    } finally {
+        isLoading.value = false;
+        initialLoading.value = false; // Set initial loading to false after first load
+    }
 };
 
-
 onMounted(() => {
-  updateStats();
-  statsInterval = setInterval(updateStats, 5000);
+    updateStats();
+    statsInterval = setInterval(updateStats, 5000);
 });
 
 onUnmounted(() => {
-  if (statsInterval) {
-    clearInterval(statsInterval);
-  }
+    if (statsInterval) {
+        clearInterval(statsInterval);
+    }
 });
 </script>
 
 <template>
   <div class="max-w-7xl mx-auto">
-    <NavBar>
-      <template #header>
-        <h1 class="text-3xl font-bold">ESP32 Dashboard</h1>
-        <p class="text-blue-100">System Monitor and Statistics</p>
-      </template>
-    </NavBar>
-
     <div v-if="error" class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
       <p class="text-red-700">{{ error }}</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <template v-if="isLoading">
-        <div v-for="n in 6" :key="n" class="bg-white rounded-lg shadow-md p-6 animate-pulse-slow">
-          <div class="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
-          <div v-for="i in 4" :key="i" class="h-4 bg-gray-100 rounded my-2"></div>
-        </div>
-      </template>
-      
-      <template v-else>
-        <!-- Time Information Card -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-blue-600 border-b border-blue-100 pb-2 mb-4">
-            Time Information
-          </h2>
+    <transition name="fade">
+      <div v-show="isVisible" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Network Information -->
+        <DashboardCard title="Network Information" :isLoading="initialLoading">
           <div class="space-y-2">
-            <p><span class="font-medium">Current Time:</span> {{ stats.current_datetime }}</p>
-            <p><span class="font-medium">Time Source:</span> {{ stats.time_source }}</p>
-            <p><span class="font-medium">Timezone:</span> {{ stats.timezone }}</p>
-            <p><span class="font-medium">Time Status:</span>
-              <span :class="stats.has_valid_time ? 'text-green-600' : 'text-red-600'">
-                {{ stats.has_valid_time ? 'Valid' : 'Invalid' }}
-              </span>
-            </p>
-          </div>
-        </div>
-
-        <!-- System Information Card -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-blue-600 border-b border-blue-100 pb-2 mb-4">
-            System Information
-          </h2>
-          <div class="space-y-2">
-            <p><span class="font-medium">Chip ID:</span> {{ systemInfo.chipId }}</p>
-            <p><span class="font-medium">IP Address:</span> {{ systemInfo.wifiIp }}</p>
-            <p><span class="font-medium">Firmware:</span> {{ systemInfo.firmwareVersion }}</p>
-            <p><span class="font-medium">WiFi Signal:</span> {{ stats.wifi_rssi }}dBm</p>
-            <p><span class="font-medium">Uptime:</span> {{ stats.uptime }} seconds</p>
-          </div>
-        </div>
-
-        <!-- Memory & Storage Card -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-blue-600 border-b border-blue-100 pb-2 mb-4">
-            Memory & Storage
-          </h2>
-          <div class="space-y-2">
-            <div>
-              <p class="mb-1"><span class="font-medium">Heap Usage:</span></p>
-              <div class="w-full bg-gray-200 rounded-full h-2.5">
-                <div class="bg-blue-600 h-2.5 rounded-full" 
-                     :style="{ width: `${stats.heap_used_percentage}%` }"></div>
-              </div>
-              <p class="text-sm text-gray-600">Free: {{ stats.free_heap }}</p>
+            <div class="stat-row">
+              <span class="stat-label">SSID:</span>
+              <span class="stat-value">{{ stats.wifi.ssid }}</span>
             </div>
-            <div>
-              <p class="mb-1"><span class="font-medium">Storage Usage:</span></p>
-              <div class="w-full bg-gray-200 rounded-full h-2.5">
-                <div class="bg-blue-600 h-2.5 rounded-full" 
-                     :style="{ width: `${stats.storage_percentage}%` }"></div>
-              </div>
-              <p class="text-sm text-gray-600">Used: {{ stats.littlefs_used }}</p>
+            <div class="stat-row">
+              <span class="stat-label">IP Address:</span>
+              <span class="stat-value">{{ stats.wifi.ip }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">MAC Address:</span>
+              <span class="stat-value">{{ stats.wifi.mac }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Signal Strength:</span>
+              <span class="stat-value">{{ stats.wifi.rssi }}dBm</span>
             </div>
           </div>
-        </div>
+        </DashboardCard>
 
-        <!-- Card Statistics -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <h2 class="text-xl font-semibold text-blue-600 border-b border-blue-100 pb-2 mb-4">
-            Card Statistics
-          </h2>
+        <!-- System Information -->
+        <DashboardCard title="System Information" :isLoading="initialLoading">
           <div class="space-y-2">
-            <p><span class="font-medium">Total Cards:</span> {{ stats.total_cards }}</p>
-            <p><span class="font-medium">Reads Today:</span> {{ stats.card_reads_today }}</p>
-            <p><span class="font-medium">Total Reads:</span> {{ stats.total_card_reads }}</p>
-            <p><span class="font-medium">WiFi Credentials:</span> {{ stats.total_wifi_credentials }}</p>
+            <div class="stat-row">
+              <span class="stat-label">CPU Frequency:</span>
+              <span class="stat-value">{{ stats.system.cpu_freq }} MHz</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Uptime:</span>
+              <span class="stat-value">{{ stats.system.uptime }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Flash Size:</span>
+              <span class="stat-value">{{ stats.storage.flash.size }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Flash Speed:</span>
+              <span class="stat-value">{{ stats.storage.flash.speed }}</span>
+            </div>
           </div>
-        </div>
-      </template>
-    </div>
+        </DashboardCard>
+
+        <!-- Memory & Storage -->
+        <DashboardCard title="Memory & Storage" :isLoading="initialLoading">
+          <div class="space-y-4">
+            <div>
+              <div class="stat-row mb-2">
+                <span class="stat-label">Heap Usage:</span>
+                <span class="stat-value">{{ stats.heap.usage_percent.toFixed(2) }}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+                <div class="bg-blue-600 h-2.5 rounded-full"
+                    :style="{ width: `${stats.heap.usage_percent}%` }"></div>
+              </div>
+              <div class="storage-info">
+                <span class="storage-label">Free:</span>
+                <span class="storage-value">{{ stats.heap.free }}</span>
+                <span class="storage-separator">/</span>
+                <span class="storage-label">Total:</span>
+                <span class="storage-value">{{ stats.heap.total }}</span>
+              </div>
+            </div>
+            <div>
+              <div class="stat-row mb-2">
+                <span class="stat-label">Storage Usage:</span>
+                <span class="stat-value">{{ stats.storage.filesystem.usage_percent.toFixed(2) }}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+                <div class="bg-blue-600 h-2.5 rounded-full"
+                    :style="{ width: `${stats.storage.filesystem.usage_percent}%` }"></div>
+              </div>
+              <div class="storage-info">
+                <span class="storage-label">Used:</span>
+                <span class="storage-value">{{ stats.storage.filesystem.used }}</span>
+                <span class="storage-separator">/</span>
+                <span class="storage-label">Total:</span>
+                <span class="storage-value">{{ stats.storage.filesystem.total }}</span>
+              </div>
+            </div>
+          </div>
+        </DashboardCard>
+
+        <!-- Database Statistics -->
+        <DashboardCard title="Database Statistics" :isLoading="initialLoading">
+          <div class="space-y-2">
+            <div class="stat-row">
+              <span class="stat-label">Total Cards:</span>
+              <span class="stat-value">{{ stats.database.cards.total }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Active Cards:</span>
+              <span class="stat-value">{{ stats.database.cards.active }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Inactive Cards:</span>
+              <span class="stat-value">{{ stats.database.cards.inactive }}</span>
+            </div>
+            <hr>
+            <div class="stat-row">
+              <span class="stat-label">Reads Today:</span>
+              <span class="stat-value">{{ stats.database.reads.today }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Total Reads:</span>
+              <span class="stat-value">{{ stats.database.reads.total }}</span>
+            </div>
+            <hr>
+          </div>
+        </DashboardCard>
+      </div>
+    </transition>
 
     <div class="text-right text-gray-500 text-sm mt-4">
       Last updated: {{ lastUpdate }}
     </div>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 0;
+}
+
+.stat-label {
+    color: #374151;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1f2937;
+    min-width: 6.5rem; /* Increased min-width to accommodate fixed decimals */
+    text-align: right;
+    transition: all 0.3s ease;
+}
+
+/* Progress bar colors */
+.bg-blue-600 {
+    transition: width 0.3s ease;
+}
+
+.storage-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #4B5563;
+}
+
+.storage-label {
+    font-weight: 500;
+}
+
+.storage-value {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-width: 4.5rem;
+    display: inline-block;
+    text-align: right;
+}
+
+.storage-separator {
+    color: #9CA3AF;
+    padding: 0 0.25rem;
+}
+</style>
