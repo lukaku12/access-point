@@ -11,7 +11,7 @@ import { isCreateCardSuccess, isCreateCardError } from '@/types/card';
 import CardsTable from '@/components/CardsTable.vue';
 import { usePagination } from '@/composables/usePagination';
 import TablePagination from '@/components/TablePagination.vue'; // Updated import name
-import { isDeleteAllCardsSuccess, isDeleteAllCardsError } from '@/types/card';
+import { isDeleteAllCardsSuccess, isDeleteAllCardsError, isDeleteCardSuccess, isDeleteCardError } from '@/types/card';
 
 interface AddCardFormExposed {
   handleSubmit: () => void;
@@ -81,22 +81,34 @@ const deleteAllCards = () => {
   showDeleteAllModal.value = true;
 };
 
+const isDeleteLoading = ref(false);
+
 const handleDeleteConfirm = async () => {
-  if (selectedCard.value) {
-    try {
-      const { data } = await removeCard(selectedCard.value.id);
-      if (data.status === 'success') {
-        await refreshCards();
-        showMessage('Card deleted successfully', 'success');
+  if (!selectedCard.value) return;
+  
+  isDeleteLoading.value = true;
+  try {
+    const { data } = await removeCard(selectedCard.value.id);
+
+    if (isDeleteCardSuccess(data)) {
+      await refreshCards();
+      showMessage('Card deleted successfully', 'success');
+    } else if (isDeleteCardError(data)) {
+      if (data.code === 401) {
+        showMessage('Authentication error. Please log in again.', 'error');
+      } else if (data.code === 400) {
+        showMessage(data.error || data.message, 'error');
       } else {
-        throw new Error(data.message || 'Failed to delete card');
+        showMessage('Failed to delete card', 'error');
       }
-    } catch (error) {
-      console.error('Error deleting card:', error);
-      showMessage(error instanceof Error ? error.message : 'Failed to delete card', 'error');
     }
+  } catch (error) {
+    console.error('Error deleting card:', error);
+    showMessage('An unexpected error occurred while deleting the card', 'error');
+  } finally {
+    isDeleteLoading.value = false;
+    showDeleteModal.value = false;
   }
-  showDeleteModal.value = false;
 };
 
 const isDeleteAllLoading = ref(false);
@@ -237,8 +249,18 @@ onMounted(refreshCards);
     </Modal>
 
     <!-- Delete Card Modal -->
-    <Modal :show="showDeleteModal" title="Delete Card" @close="showDeleteModal = false" @confirm="handleDeleteConfirm">
+    <Modal 
+      :show="showDeleteModal" 
+      title="Delete Card" 
+      @close="showDeleteModal = false" 
+      @confirm="handleDeleteConfirm"
+      :disabled="isDeleteLoading"
+      :loading="isDeleteLoading"
+    >
       <p>Are you sure you want to delete this card?</p>
+      <p v-if="selectedCard" class="text-sm text-gray-500 mt-2">
+        Card Number: {{ selectedCard.number }}
+      </p>
       <p class="text-sm text-gray-500 mt-2">This action cannot be undone.</p>
     </Modal>
 

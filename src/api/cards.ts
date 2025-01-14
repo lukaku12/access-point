@@ -1,5 +1,5 @@
 import api from '@/api/axios';
-import type { CardsResponse, ApiResponse, Card, UnregisteredCardsResponse, CreateCardResponse, DeleteAllCardsResponse } from '@/types/card';
+import type { CardsResponse, ApiResponse, Card, UnregisteredCardsResponse, CreateCardResponse, DeleteAllCardsResponse, DeleteCardResponse } from '@/types/card';
 
 export const fetchCards = (page = 1, perPage = 10) => {
   return api.get<CardsResponse>('/cards', {
@@ -11,7 +11,7 @@ export const fetchCards = (page = 1, perPage = 10) => {
 };
 
 export const removeCard = async (id: number) => {
-  return api.delete<ApiResponse>(`/cards/${id}`);
+  return api.delete<DeleteCardResponse>(`/cards?card_id=${id}`);
 };
 
 export const removeAllCards = async () => {

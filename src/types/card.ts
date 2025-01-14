@@ -102,3 +102,37 @@ export const isDeleteAllCardsError = (
 ): response is DeleteAllCardsErrorResponse => {
   return response.status === 'error';
 };
+
+export interface DeleteCardSuccessResponse {
+  status: 'success';
+  code: 200;
+  message: string;
+  data: {
+    card_id: number;
+    timestamp: number;
+  };
+}
+
+export interface DeleteCardErrorResponse {
+  status: 'error';
+  code: 400 | 401 | 500;
+  message: string;
+  error?: string;
+  data?: {
+    card_id: number;
+  };
+}
+
+export type DeleteCardResponse = DeleteCardSuccessResponse | DeleteCardErrorResponse;
+
+export const isDeleteCardSuccess = (
+  response: DeleteCardResponse
+): response is DeleteCardSuccessResponse => {
+  return response.status === 'success' && response.code === 200;
+};
+
+export const isDeleteCardError = (
+  response: DeleteCardResponse
+): response is DeleteCardErrorResponse => {
+  return response.status === 'error';
+};
