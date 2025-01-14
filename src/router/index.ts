@@ -3,12 +3,21 @@ import {
   createWebHistory,
   type RouteRecordRaw
 } from 'vue-router';
+import { isAuthorized } from '@/api/login';
 
 const routes: RouteRecordRaw[] = [
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/LoginView.vue'),
+    meta: {
+      public: true
+    }
+  },
+  {
     path: '/',
     name: 'landing',
-    redirect: { name: 'dashboard' }
+    redirect: isAuthorized() ? { name: 'dashboard' } : { name: 'login' }
   },
   {
     path: '/dashboard',
@@ -69,6 +78,14 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
+});
+
+router.beforeEach((to, _, next) => {
+  if (!to.meta.public && !isAuthorized()) {
+    next({ name: 'login' });
+  } else {
+    next();
+  }
 });
 
 export default router;

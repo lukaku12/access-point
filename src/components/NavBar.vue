@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import { onClickOutside } from '@vueuse/core';
 import BaseModal from '@/components/base/BaseModal.vue';
 import { useTheme } from '@/composables/useTheme';
+import { logout } from '@/api/login';
 
 interface NavLink {
   name: string;
@@ -62,6 +63,7 @@ const handleLogout = () => {
 
 const confirmLogout = () => {
   // Add your actual logout logic here
+  logout();
   console.log('Logout confirmed');
   showLogoutModal.value = false;
 };
