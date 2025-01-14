@@ -8,7 +8,7 @@ const currentRoute = computed(() => (route.name as string) || '');
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <div class="font-sans antialiased p-8 max-w-7xl mx-auto">
       <!-- Navbar stays at top -->
       <NavBar :active-route="currentRoute" />

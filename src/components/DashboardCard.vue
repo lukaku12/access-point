@@ -7,15 +7,15 @@ defineProps<{
 
 <template>
   <div
-    class="bg-white rounded-xl border border-gray-200/60 shadow-lg shadow-gray-200/40 backdrop-blur-sm transition-all duration-200 hover:shadow-xl hover:shadow-gray-200/60"
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200/60 dark:border-gray-700"
   >
-    <div class="p-6">
+    <div class="p-4">
       <h3
-        class="text-base font-semibold text-gray-900 flex items-center justify-between"
+        class="text-lg font-medium text-gray-900 dark:text-white mb-4"
       >
         {{ title }}
         <div v-if="isLoading" class="animate-pulse">
-          <div class="h-4 w-4 bg-gray-200 rounded-full"></div>
+          <div class="h-4 w-4 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
         </div>
       </h3>
       <div :class="{ 'opacity-50': isLoading }">

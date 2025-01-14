@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { onClickOutside } from '@vueuse/core';
 import BaseModal from '@/components/base/BaseModal.vue';
+import { useTheme } from '@/composables/useTheme';
 
 interface NavLink {
   name: string;
@@ -65,29 +66,23 @@ const confirmLogout = () => {
   showLogoutModal.value = false;
 };
 
-const isDarkMode = ref(false);
+const { isDark, toggleTheme } = useTheme();
 const isAnimating = ref(false);
 
-const toggleTheme = async () => {
+const handleThemeToggle = async () => {
   isAnimating.value = true;
-  isDarkMode.value = !isDarkMode.value;
-  document.documentElement.classList.toggle('dark');
+  toggleTheme();
   // Reset animation flag after transition
   setTimeout(() => {
     isAnimating.value = false;
   }, 500);
 };
-
-// Initialize theme on mount
-onMounted(() => {
-  isDarkMode.value = document.documentElement.classList.contains('dark');
-});
 </script>
 
 <template>
   <nav
     ref="navRef"
-    class="bg-blue-700 text-white rounded-lg mb-6 shadow-md relative"
+    class="bg-blue-700 text-white rounded-lg mb-6 shadow-md relative dark:bg-gray-800"
   >
     <!-- Mobile Menu Button -->
     <div class="flex items-center justify-between p-3 lg:hidden">
@@ -101,24 +96,20 @@ onMounted(() => {
       </button>
       <div class="flex items-center gap-2">
         <button
-          @click="toggleTheme"
+          @click="handleThemeToggle"
           class="relative w-10 h-10 rounded-md hover:bg-blue-600 transition-all flex items-center justify-center overflow-hidden"
           aria-label="Toggle theme"
           :disabled="isAnimating"
         >
           <div
             class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
-            :class="[
-              isDarkMode ? 'translate-y-full' : 'translate-y-0'
-            ]"
+            :class="[isDark ? 'translate-y-full' : 'translate-y-0']"
           >
             <div class="i-heroicons-moon-solid w-6 h-6"></div>
           </div>
           <div
             class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
-            :class="[
-              isDarkMode ? 'translate-y-0' : '-translate-y-full'
-            ]"
+            :class="[isDark ? 'translate-y-0' : '-translate-y-full']"
           >
             <div class="i-heroicons-sun-solid w-6 h-6"></div>
           </div>
@@ -155,24 +146,20 @@ onMounted(() => {
       </div>
       <div class="flex items-center gap-2">
         <button
-          @click="toggleTheme"
+          @click="handleThemeToggle"
           class="relative w-10 h-10 rounded-md hover:bg-blue-600 transition-all flex items-center justify-center overflow-hidden"
           aria-label="Toggle theme"
           :disabled="isAnimating"
         >
           <div
             class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
-            :class="[
-              isDarkMode ? 'translate-y-full' : 'translate-y-0'
-            ]"
+            :class="[isDark ? 'translate-y-full' : 'translate-y-0']"
           >
             <div class="i-heroicons-moon-solid w-6 h-6"></div>
           </div>
           <div
             class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
-            :class="[
-              isDarkMode ? 'translate-y-0' : '-translate-y-full'
-            ]"
+            :class="[isDark ? 'translate-y-0' : '-translate-y-full']"
           >
             <div class="i-heroicons-sun-solid w-6 h-6"></div>
           </div>
@@ -199,7 +186,7 @@ onMounted(() => {
     >
       <div
         v-show="isMenuOpen"
-        class="lg:hidden absolute left-0 right-0 top-[100%] bg-blue-700 rounded-b-lg shadow-lg z-50 border-t border-blue-600"
+        class="lg:hidden absolute left-0 right-0 top-[100%] bg-blue-700 dark:bg-gray-800 rounded-b-lg shadow-lg z-50 border-t border-blue-600 dark:border-gray-700"
       >
         <div class="p-3 flex flex-col gap-2">
           <router-link

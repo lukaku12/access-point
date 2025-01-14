@@ -160,7 +160,7 @@ const handleAddNetwork = async (formData: Partial<WiFiNetwork>) => {
       showMessage('WiFi network added successfully', 'success');
       showAddModal.value = false;
     } else if (isCreateWiFiError(data)) {
-      showMessage(data.message, 'error');
+      showMessage(data.error || 'Unknown error occurred', 'error');
     }
   } catch (error) {
     console.error('Error adding network:', error);
@@ -203,7 +203,7 @@ onMounted(refreshNetworks);
 </script>
 
 <template>
-  <div class="space-y-6 h-screen max-h-screen overflow-hidden flex flex-col">
+  <div class="space-y-6 h-screen max-h-screen overflow-hidden flex flex-col bg-white dark:bg-gray-900">
     <!-- Flash message and buttons section -->
     <div class="flex-none">
       <FlashMessage
@@ -273,17 +273,17 @@ onMounted(refreshNetworks);
     <!-- Stats cards section -->
     <div class="flex-none grid grid-cols-1 md:grid-cols-3 gap-4">
       <DashboardCard title="Total Networks" :isLoading="loading">
-        <div class="text-2xl font-bold">{{ pagination.totalItems }}</div>
+        <div class="text-2xl font-bol dark:text-white">{{ pagination.totalItems }}</div>
       </DashboardCard>
       <DashboardCard title="Current Page" :isLoading="loading">
-        <div class="text-2xl font-bold">
+        <div class="text-2xl font-bold dark:text-white">
           {{ pagination.totalPages === 0 ? 0 : pagination.currentPage }}/{{
             pagination.totalPages
           }}
         </div>
       </DashboardCard>
       <DashboardCard title="Per Page" :isLoading="loading">
-        <div class="text-2xl font-bold">{{ pagination.perPage }}</div>
+        <div class="text-2xl font-bold dark:text-white">{{ pagination.perPage }}</div>
       </DashboardCard>
     </div>
 
@@ -388,21 +388,24 @@ onMounted(refreshNetworks);
 }
 
 .btn-primary {
-  @apply bg-blue-600 text-white;
+  @apply bg-blue-600 text-white dark:bg-blue-500 dark:text-gray-100;
   @apply hover:bg-blue-700 active:bg-blue-800;
-  @apply focus:ring-blue-500;
+  @apply dark:hover:bg-blue-600 dark:active:bg-blue-700;
+  @apply focus:ring-blue-500 dark:focus:ring-blue-400;
 }
 
 .btn-danger {
-  @apply bg-red-600 text-white;
+  @apply bg-red-600 text-white dark:bg-red-500 dark:text-gray-100;
   @apply hover:bg-red-700 active:bg-red-800;
-  @apply focus:ring-red-500;
+  @apply dark:hover:bg-red-600 dark:active:bg-red-700;
+  @apply focus:ring-red-500 dark:focus:ring-red-400;
 }
 
 .btn-success {
-  @apply bg-green-600 text-white;
+  @apply bg-green-600 text-white dark:bg-green-500 dark:text-gray-100;
   @apply hover:bg-green-700 active:bg-green-800;
-  @apply focus:ring-green-500;
+  @apply dark:hover:bg-green-600 dark:active:bg-green-700;
+  @apply focus:ring-green-500 dark:focus:ring-green-400;
 }
 
 /* Add disabled state styles */
@@ -411,6 +414,7 @@ onMounted(refreshNetworks);
 .btn-success:disabled {
   @apply opacity-50 cursor-not-allowed;
   @apply hover:shadow-md active:shadow-md;
+  @apply dark:opacity-40;
 }
 
 /* Add loading state animation */
@@ -444,33 +448,28 @@ onMounted(refreshNetworks);
 }
 
 .pagination-arrow-btn {
-  @apply relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300;
-  @apply hover:bg-gray-50 focus:z-20 focus:outline-offset-0;
-}
-
-.pagination-arrow-btn:first-child {
-  @apply rounded-l-md;
-}
-
-.pagination-arrow-btn:last-child {
-  @apply rounded-r-md;
+  @apply relative inline-flex items-center px-2 py-2 ring-1 ring-inset;
+  @apply text-gray-400 dark:text-gray-400 ring-gray-300 dark:ring-gray-600;
+  @apply hover:bg-gray-50 dark:hover:bg-gray-700 focus:z-20 focus:outline-offset-0;
 }
 
 .pagination-number-btn {
-  @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300;
+  @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset;
+  @apply ring-gray-300 dark:ring-gray-600;
   @apply focus:z-20 focus:outline-offset-0 transition-colors duration-200;
 }
 
 .pagination-active {
-  @apply z-10 bg-blue-600 text-white ring-blue-600;
-  @apply focus:outline-none hover:bg-blue-700;
+  @apply z-10 bg-blue-600 dark:bg-blue-500 text-white ring-blue-600 dark:ring-blue-500;
+  @apply focus:outline-none hover:bg-blue-700 dark:hover:bg-blue-600;
 }
 
 .pagination-inactive {
-  @apply text-gray-900 hover:bg-gray-50;
+  @apply text-gray-900 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700;
 }
 
 .pagination-ellipsis {
-  @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300;
+  @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold;
+  @apply text-gray-700 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600;
 }
 </style>

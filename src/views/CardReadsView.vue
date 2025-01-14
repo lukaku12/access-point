@@ -92,7 +92,7 @@ onMounted(refreshCardReads);
 </script>
 
 <template>
-  <div class="space-y-6 h-screen max-h-screen overflow-hidden flex flex-col">
+  <div class="space-y-6 h-screen max-h-screen overflow-hidden flex flex-col bg-white dark:bg-gray-900">
     <!-- Flash message and buttons section -->
     <div class="flex-none">
       <FlashMessage
@@ -174,17 +174,17 @@ onMounted(refreshCardReads);
     <!-- Stats cards section -->
     <div class="flex-none grid grid-cols-1 md:grid-cols-3 gap-4">
       <DashboardCard title="Total Card Reads" :isLoading="loading">
-        <div class="text-2xl font-bold">{{ pagination.totalItems }}</div>
+        <div class="text-2xl font-bold dark:text-white">{{ pagination.totalItems }}</div>
       </DashboardCard>
       <DashboardCard title="Current Page" :isLoading="loading">
-        <div class="text-2xl font-bold">
+        <div class="text-2xl font-bold dark:text-white">
           {{ pagination.totalPages === 0 ? 0 : pagination.currentPage }}/{{
             pagination.totalPages
           }}
         </div>
       </DashboardCard>
       <DashboardCard title="Per Page" :isLoading="loading">
-        <div class="text-2xl font-bold">{{ pagination.perPage }}</div>
+        <div class="text-2xl font-bold dark:text-white">{{ pagination.perPage }}</div>
       </DashboardCard>
     </div>
 
@@ -252,19 +252,22 @@ onMounted(refreshCardReads);
 }
 
 .btn-primary {
-  @apply bg-blue-600 text-white;
+  @apply bg-blue-600 text-white dark:bg-blue-500 dark:text-gray-100;
   @apply hover:bg-blue-700 active:bg-blue-800;
-  @apply focus:ring-blue-500;
+  @apply dark:hover:bg-blue-600 dark:active:bg-blue-700;
+  @apply focus:ring-blue-500 dark:focus:ring-blue-400;
 }
 
 .btn-danger {
-  @apply bg-red-600 text-white;
+  @apply bg-red-600 text-white dark:bg-red-500 dark:text-gray-100;
   @apply hover:bg-red-700 active:bg-red-800;
-  @apply focus:ring-red-500;
+  @apply dark:hover:bg-red-600 dark:active:bg-red-700;
+  @apply focus:ring-red-500 dark:focus:ring-red-400;
 }
 
 .btn-danger:disabled {
   @apply opacity-50 cursor-not-allowed;
   @apply hover:bg-red-600 active:bg-red-600;
+  @apply dark:hover:bg-red-500 dark:active:bg-red-500;
 }
 </style>

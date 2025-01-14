@@ -129,15 +129,15 @@ onMounted(loadUnregisteredCards);
   <form @submit.prevent="handleSubmit" class="space-y-8 max-w-2xl mx-auto">
     <!-- Card Details Section -->
     <div
-      class="bg-white p-6 rounded-xl border border-gray-200/60 shadow-lg shadow-gray-200/40 hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-200"
+      class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40 hover:shadow-xl hover:shadow-gray-200/60 dark:hover:shadow-gray-900/60 transition-all duration-200"
     >
       <div class="space-y-6">
         <div class="flex items-center justify-between">
-          <h4 class="text-lg font-semibold text-gray-900">Card Details</h4>
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Card Details</h4>
           <button
             type="button"
             @click="loadUnregisteredCards"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors duration-200 gap-2"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200 gap-2"
             :disabled="isLoading"
           >
             <svg
@@ -179,16 +179,16 @@ onMounted(loadUnregisteredCards);
 
           <div
             v-if="isOpen && filteredCards.length > 0"
-            class="absolute z-10 mt-1 w-full bg-white rounded-lg border border-gray-200 shadow-lg max-h-60 overflow-auto"
+            class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-lg max-h-60 overflow-auto"
           >
             <div
               v-for="card in filteredCards"
               :key="card.card_number"
               @mousedown="handleCardSelect(card)"
-              class="px-4 py-2 hover:bg-blue-50 cursor-pointer text-sm transition-colors duration-150"
+              class="px-4 py-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer text-sm transition-colors duration-150"
             >
-              <div class="font-medium">{{ card.card_number }}</div>
-              <div class="text-xs text-gray-500">
+              <div class="font-medium dark:text-white">{{ card.card_number }}</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">
                 Last seen: {{ new Date(card.last_seen).toLocaleString() }}
               </div>
             </div>
@@ -206,9 +206,9 @@ onMounted(loadUnregisteredCards);
 
     <!-- Validity Period Section -->
     <div
-      class="bg-white p-6 rounded-xl border border-gray-200/60 shadow-lg shadow-gray-200/40 hover:shadow-xl hover:shadow-gray-200/60 transition-all duration-200"
+      class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40 hover:shadow-xl hover:shadow-gray-200/60 dark:hover:shadow-gray-900/60 transition-all duration-200"
     >
-      <h4 class="text-lg font-semibold text-gray-900 mb-6">Validity Period</h4>
+      <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Validity Period</h4>
       <div class="grid grid-cols-2 gap-8">
         <BaseInput
           v-model="formData.start_date"
@@ -231,7 +231,7 @@ onMounted(loadUnregisteredCards);
     <!-- Simplified validation message -->
     <div
       v-if="!isValid && Object.keys(touched).length > 0"
-      class="rounded-lg p-4 bg-red-50 text-red-600"
+      class="rounded-lg p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400"
     >
       <div class="text-sm">
         Please fix the validation errors before submitting.
@@ -326,5 +326,27 @@ input[type='date']::-webkit-calendar-picker-indicator {
 /* Add subtle gradient background */
 .bg-white {
   background: linear-gradient(to bottom right, white, #fafafa);
+}
+
+.dark .bg-white {
+  background: linear-gradient(to bottom right, #1f2937, #111827);
+}
+
+/* Update scrollbar colors for dark mode */
+.dark .overflow-auto {
+  scrollbar-color: #4b5563 #1f2937;
+}
+
+.dark .overflow-auto::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+.dark .overflow-auto::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+}
+
+/* Update hover effect for dark mode */
+.dark .hover\:shadow-xl:hover {
+  filter: brightness(1.1);
 }
 </style>

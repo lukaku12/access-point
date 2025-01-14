@@ -100,9 +100,9 @@ const confirmUpload = () => {
 </script>
 
 <template>
-  <div class="max-w-xl mx-auto">
+  <div class="max-w-xl mx-auto p-4">
     <!-- Warning Banner -->
-    <div class="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4">
+    <div class="mb-6 bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 p-4">
       <div class="flex">
         <div class="flex-shrink-0">
           <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
@@ -120,7 +120,7 @@ const confirmUpload = () => {
 
     <!-- Upload Area -->
     <div
-      class="relative bg-white shadow-sm rounded-lg"
+      class="relative bg-white dark:bg-gray-800 shadow-sm rounded-lg"
       @dragenter="dragEvents.dragenter"
       @dragleave="dragEvents.dragleave"
       @dragover="dragEvents.dragover"
@@ -137,26 +137,26 @@ const confirmUpload = () => {
       <div
         :class="[
           'border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200',
-          state.isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300',
+          state.isDragging ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30' : 'border-gray-300 dark:border-gray-600',
           state.isUploading ? 'pointer-events-none opacity-50' : 'hover:border-blue-500'
         ]"
         @click="fileInputRef?.click()"
       >
         <!-- Upload Icon and Text -->
         <div class="space-y-4">
-          <div class="text-5xl text-gray-400 flex justify-center">
+          <div class="text-5xl text-gray-400 dark:text-gray-500 flex justify-center">
             <svg class="h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
             </svg>
           </div>
-          <div class="text-gray-600">
+          <div class="text-gray-600 dark:text-gray-300">
             <span class="font-medium">Click to upload</span> or drag and drop
             <br />
-            <span class="text-sm text-gray-500">Firmware file (.bin)</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Firmware file (.bin)</span>
           </div>
-          <div v-if="state.file" class="text-sm bg-blue-50 p-2 rounded">
-            <span class="font-medium text-blue-700">Selected file:</span>
-            <span class="text-blue-600">{{ state.file.name }}</span>
+          <div v-if="state.file" class="text-sm bg-blue-50 dark:bg-blue-900/30 p-2 rounded">
+            <span class="font-medium text-blue-700 dark:text-blue-400">Selected file:</span>
+            <span class="text-blue-600 dark:text-blue-300">{{ state.file.name }}</span>
           </div>
         </div>
       </div>
@@ -164,31 +164,31 @@ const confirmUpload = () => {
       <!-- Progress Section -->
       <div v-if="state.isUploading" class="mt-6 px-4">
         <div class="flex justify-between items-center mb-2">
-          <span class="text-sm font-medium text-gray-700">Upload Progress</span>
-          <span class="text-sm font-medium text-blue-600">{{ uploadProgress }}</span>
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Upload Progress</span>
+          <span class="text-sm font-medium text-blue-600 dark:text-blue-400">{{ uploadProgress }}</span>
         </div>
-        <div class="w-full bg-gray-200 rounded-full h-2.5">
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
           <div
-            class="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-in-out"
+            class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full transition-all duration-300 ease-in-out"
             :style="{ width: uploadProgress }"
           ></div>
         </div>
-        <p class="mt-2 text-sm text-gray-500 text-center">Please do not close this window</p>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 text-center">Please do not close this window</p>
       </div>
 
       <!-- Error Message -->
       <div
         v-if="state.error"
-        class="mt-4 p-4 bg-red-50 border-l-4 border-red-500 rounded"
+        class="mt-4 p-4 bg-red-50 dark:bg-red-900/30 border-l-4 border-red-500 rounded"
       >
         <div class="flex">
           <div class="flex-shrink-0">
-            <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <svg class="h-5 w-5 text-red-400 dark:text-red-300" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
             </svg>
           </div>
           <div class="ml-3">
-            <p class="text-sm text-red-700">{{ state.error }}</p>
+            <p class="text-sm text-red-700 dark:text-red-300">{{ state.error }}</p>
           </div>
         </div>
       </div>
@@ -197,9 +197,9 @@ const confirmUpload = () => {
     <!-- Action Buttons -->
     <div class="mt-6 flex gap-4">
       <button
-        class="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium 
-               hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 
-               focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed
+        class="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 py-2 px-4 rounded-lg font-medium 
+               hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 
+               focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed
                transition-colors duration-200"
         :disabled="state.isUploading"
         @click="state.file = null"
@@ -208,9 +208,9 @@ const confirmUpload = () => {
         Cancel
       </button>
       <button
-        class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium 
-               hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 
-               focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed
+        class="flex-1 bg-blue-600 dark:bg-blue-500 text-white py-2 px-4 rounded-lg font-medium 
+               hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 
+               focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed
                transition-colors duration-200"
         :disabled="!state.file || state.isUploading"
         @click="confirmUpload"

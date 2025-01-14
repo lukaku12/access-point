@@ -88,8 +88,8 @@ onUnmounted(() => {
 
 <template>
   <div class="max-w-7xl mx-auto">
-    <div v-if="error" class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-      <p class="text-red-700">{{ error }}</p>
+    <div v-if="error" class="bg-red-50 dark:bg-red-900/50 border-l-4 border-red-500 p-4 mb-6">
+      <p class="text-red-700 dark:text-red-200">{{ error }}</p>
     </div>
 
     <transition name="fade">
@@ -101,20 +101,20 @@ onUnmounted(() => {
         <DashboardCard title="Network Information" :isLoading="initialLoading">
           <div class="space-y-2">
             <div class="stat-row">
-              <span class="stat-label">SSID:</span>
-              <span class="stat-value">{{ stats.wifi.ssid }}</span>
+              <span class="stat-label dark:text-gray-300">SSID:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.wifi.ssid }}</span>
             </div>
             <div class="stat-row">
-              <span class="stat-label">IP Address:</span>
-              <span class="stat-value">{{ stats.wifi.ip }}</span>
+              <span class="stat-label dark:text-gray-300">IP Address:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.wifi.ip }}</span>
             </div>
             <div class="stat-row">
-              <span class="stat-label">MAC Address:</span>
-              <span class="stat-value">{{ stats.wifi.mac }}</span>
+              <span class="stat-label dark:text-gray-300">MAC Address:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.wifi.mac }}</span>
             </div>
             <div class="stat-row">
-              <span class="stat-label">Signal Strength:</span>
-              <span class="stat-value">{{ stats.wifi.rssi }}dBm</span>
+              <span class="stat-label dark:text-gray-300">Signal Strength:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.wifi.rssi }}dBm</span>
             </div>
           </div>
         </DashboardCard>
@@ -123,20 +123,20 @@ onUnmounted(() => {
         <DashboardCard title="System Information" :isLoading="initialLoading">
           <div class="space-y-2">
             <div class="stat-row">
-              <span class="stat-label">CPU Frequency:</span>
-              <span class="stat-value">{{ stats.system.cpu_freq }} MHz</span>
+              <span class="stat-label dark:text-gray-300">CPU Frequency:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.system.cpu_freq }} MHz</span>
             </div>
             <div class="stat-row">
-              <span class="stat-label">Uptime:</span>
-              <span class="stat-value">{{ stats.system.uptime }}</span>
+              <span class="stat-label dark:text-gray-300">Uptime:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.system.uptime }}</span>
             </div>
             <div class="stat-row">
-              <span class="stat-label">Flash Size:</span>
-              <span class="stat-value">{{ stats.storage.flash.size }}</span>
+              <span class="stat-label dark:text-gray-300">Flash Size:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.storage.flash.size }}</span>
             </div>
             <div class="stat-row">
-              <span class="stat-label">Flash Speed:</span>
-              <span class="stat-value">{{ stats.storage.flash.speed }}</span>
+              <span class="stat-label dark:text-gray-300">Flash Speed:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.storage.flash.speed }}</span>
             </div>
           </div>
         </DashboardCard>
@@ -146,50 +146,50 @@ onUnmounted(() => {
           <div class="space-y-4">
             <div>
               <div class="stat-row mb-2">
-                <span class="stat-label">Heap Usage:</span>
-                <span class="stat-value"
+                <span class="stat-label dark:text-gray-300">Heap Usage:</span>
+                <span class="stat-value dark:text-gray-100"
                   >{{ stats.heap.usage_percent.toFixed(2) }}%</span
                 >
               </div>
-              <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-1">
                 <div
-                  class="bg-blue-600 h-2.5 rounded-full"
+                  class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full"
                   :style="{ width: `${stats.heap.usage_percent}%` }"
                 ></div>
               </div>
-              <div class="storage-info">
-                <span class="storage-label">Free:</span>
-                <span class="storage-value">{{ stats.heap.free }}</span>
-                <span class="storage-separator">/</span>
-                <span class="storage-label">Total:</span>
-                <span class="storage-value">{{ stats.heap.total }}</span>
+              <div class="storage-info dark:text-gray-400">
+                <span class="storage-label dark:text-gray-300">Free:</span>
+                <span class="storage-value dark:text-gray-200">{{ stats.heap.free }}</span>
+                <span class="storage-separator dark:text-gray-500">/</span>
+                <span class="storage-label dark:text-gray-300">Total:</span>
+                <span class="storage-value dark:text-gray-200">{{ stats.heap.total }}</span>
               </div>
             </div>
             <div>
               <div class="stat-row mb-2">
-                <span class="stat-label">Storage Usage:</span>
-                <span class="stat-value"
+                <span class="stat-label dark:text-gray-300">Storage Usage:</span>
+                <span class="stat-value dark:text-gray-100"
                   >{{
                     stats.storage.filesystem.usage_percent.toFixed(2)
                   }}%</span
                 >
               </div>
-              <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-1">
                 <div
-                  class="bg-blue-600 h-2.5 rounded-full"
+                  class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full"
                   :style="{
                     width: `${stats.storage.filesystem.usage_percent}%`
                   }"
                 ></div>
               </div>
-              <div class="storage-info">
-                <span class="storage-label">Used:</span>
-                <span class="storage-value">{{
+              <div class="storage-info dark:text-gray-400">
+                <span class="storage-label dark:text-gray-300">Used:</span>
+                <span class="storage-value dark:text-gray-200">{{
                   stats.storage.filesystem.used
                 }}</span>
-                <span class="storage-separator">/</span>
-                <span class="storage-label">Total:</span>
-                <span class="storage-value">{{
+                <span class="storage-separator dark:text-gray-500">/</span>
+                <span class="storage-label dark:text-gray-300">Total:</span>
+                <span class="storage-value dark:text-gray-200">{{
                   stats.storage.filesystem.total
                 }}</span>
               </div>
@@ -201,35 +201,35 @@ onUnmounted(() => {
         <DashboardCard title="Database Statistics" :isLoading="initialLoading">
           <div class="space-y-2">
             <div class="stat-row">
-              <span class="stat-label">Total Cards:</span>
-              <span class="stat-value">{{ stats.database.cards.total }}</span>
+              <span class="stat-label dark:text-gray-300">Total Cards:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.database.cards.total }}</span>
             </div>
             <div class="stat-row">
-              <span class="stat-label">Active Cards:</span>
-              <span class="stat-value">{{ stats.database.cards.active }}</span>
+              <span class="stat-label dark:text-gray-300">Active Cards:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.database.cards.active }}</span>
             </div>
             <div class="stat-row">
-              <span class="stat-label">Inactive Cards:</span>
-              <span class="stat-value">{{
+              <span class="stat-label dark:text-gray-300">Inactive Cards:</span>
+              <span class="stat-value dark:text-gray-100">{{
                 stats.database.cards.inactive
               }}</span>
             </div>
-            <hr />
+            <hr class="border-gray-200 dark:border-gray-700" />
             <div class="stat-row">
-              <span class="stat-label">Reads Today:</span>
-              <span class="stat-value">{{ stats.database.reads.today }}</span>
+              <span class="stat-label dark:text-gray-300">Reads Today:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.database.reads.today }}</span>
             </div>
             <div class="stat-row">
-              <span class="stat-label">Total Reads:</span>
-              <span class="stat-value">{{ stats.database.reads.total }}</span>
+              <span class="stat-label dark:text-gray-300">Total Reads:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.database.reads.total }}</span>
             </div>
-            <hr />
+            <hr class="border-gray-200 dark:border-gray-700" />
           </div>
         </DashboardCard>
       </div>
     </transition>
 
-    <div class="text-right text-gray-500 text-sm mt-4">
+    <div class="text-right text-gray-500 dark:text-gray-400 text-sm mt-4">
       Last updated: {{ lastUpdate }}
     </div>
   </div>
@@ -293,6 +293,39 @@ onUnmounted(() => {
 
 .storage-separator {
   color: #9ca3af;
+  padding: 0 0.25rem;
+}
+
+.stat-label {
+  @apply text-gray-700 dark:text-gray-300 font-medium;
+}
+
+.stat-value {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  @apply text-gray-900 dark:text-gray-100;
+  min-width: 6.5rem;
+  text-align: right;
+  transition: all 0.3s ease;
+}
+
+.storage-info {
+  @apply flex justify-center items-center gap-2 text-sm text-gray-600 dark:text-gray-400;
+}
+
+.storage-label {
+  @apply font-medium text-gray-700 dark:text-gray-300;
+}
+
+.storage-value {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  @apply text-gray-900 dark:text-gray-100;
+  min-width: 4.5rem;
+  display: inline-block;
+  text-align: right;
+}
+
+.storage-separator {
+  @apply text-gray-400 dark:text-gray-600;
   padding: 0 0.25rem;
 }
 </style>

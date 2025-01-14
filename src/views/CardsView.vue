@@ -303,17 +303,17 @@ onMounted(refreshCards);
     <!-- Stats cards section -->
     <div class="flex-none grid grid-cols-1 md:grid-cols-3 gap-4">
       <DashboardCard title="Total Cards" :isLoading="loading">
-        <div class="text-2xl font-bold">{{ pagination.totalItems }}</div>
+        <div class="text-2xl font-bold dark:text-white">{{ pagination.totalItems }}</div>
       </DashboardCard>
       <DashboardCard title="Current Page" :isLoading="loading">
-        <div class="text-2xl font-bold">
+        <div class="text-2xl font-bold dark:text-white">
           {{ pagination.totalPages === 0 ? 0 : pagination.currentPage }}/{{
             pagination.totalPages
           }}
         </div>
       </DashboardCard>
       <DashboardCard title="Per Page" :isLoading="loading">
-        <div class="text-2xl font-bold">{{ pagination.perPage }}</div>
+        <div class="text-2xl font-bold dark:text-white">{{ pagination.perPage }}</div>
       </DashboardCard>
     </div>
 
@@ -390,11 +390,11 @@ onMounted(refreshCards);
       :disabled="isDeleteLoading"
       :loading="isDeleteLoading"
     >
-      <p>Are you sure you want to delete this card?</p>
-      <p v-if="selectedCard" class="text-sm text-gray-500 mt-2">
+      <p class="dark:text-gray-300">Are you sure you want to delete this card?</p>
+      <p v-if="selectedCard" class="text-sm text-gray-500 dark:text-gray-400 mt-2">
         Card Number: {{ selectedCard.number }}
       </p>
-      <p class="text-sm text-gray-500 mt-2">This action cannot be undone.</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">This action cannot be undone.</p>
     </BaseModal>
 
     <!-- Delete All Cards Modal -->
@@ -406,8 +406,8 @@ onMounted(refreshCards);
       :disabled="isDeleteAllLoading"
       :loading="isDeleteAllLoading"
     >
-      <p>Are you sure you want to delete all cards?</p>
-      <p class="text-sm text-gray-500 mt-2">This action cannot be undone.</p>
+      <p class="dark:text-gray-300">Are you sure you want to delete all cards?</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">This action cannot be undone.</p>
     </BaseModal>
   </div>
 </template>
@@ -426,18 +426,21 @@ onMounted(refreshCards);
   @apply bg-blue-600 text-white;
   @apply hover:bg-blue-700 active:bg-blue-800;
   @apply focus:ring-blue-500;
+  @apply dark:bg-blue-500 dark:hover:bg-blue-600 dark:active:bg-blue-700;
 }
 
 .btn-danger {
   @apply bg-red-600 text-white;
   @apply hover:bg-red-700 active:bg-red-800;
   @apply focus:ring-red-500;
+  @apply dark:bg-red-500 dark:hover:bg-red-600 dark:active:bg-red-700;
 }
 
 .btn-success {
   @apply bg-green-600 text-white;
   @apply hover:bg-green-700 active:bg-green-800;
   @apply focus:ring-green-500;
+  @apply dark:bg-green-500 dark:hover:bg-green-600 dark:active:bg-green-700;
 }
 
 /* Add disabled state styles */

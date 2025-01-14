@@ -91,12 +91,12 @@ defineExpose({
   <form @submit.prevent="handleSubmit" class="space-y-8 max-w-2xl mx-auto">
     <!-- Card Details Section -->
     <div
-      class="bg-white p-6 rounded-xl border border-gray-200/60 shadow-lg shadow-gray-200/40"
+      class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40"
     >
       <div class="space-y-6">
         <div class="flex items-center justify-between">
-          <h4 class="text-lg font-semibold text-gray-900">Card Details</h4>
-          <div v-if="isSubmitting" class="text-sm text-blue-600">
+          <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Card Details</h4>
+          <div v-if="isSubmitting" class="text-sm text-blue-600 dark:text-blue-400">
             <span class="inline-block animate-spin mr-2">↻</span>
             Saving changes...
           </div>
@@ -122,9 +122,9 @@ defineExpose({
 
     <!-- Validity Period Section -->
     <div
-      class="bg-white p-6 rounded-xl border border-gray-200/60 shadow-lg shadow-gray-200/40"
+      class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40"
     >
-      <h4 class="text-lg font-semibold text-gray-900 mb-6">Validity Period</h4>
+      <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Validity Period</h4>
       <div class="grid grid-cols-2 gap-8">
         <BaseInput
           v-model="formData.start_date"
@@ -147,7 +147,7 @@ defineExpose({
     <!-- Validation message -->
     <div
       v-if="!isValid && Object.keys(touched).length > 0"
-      class="rounded-lg p-4 bg-red-50 text-red-600"
+      class="rounded-lg p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400"
     >
       <div class="text-sm">
         Please fix the validation errors before submitting.

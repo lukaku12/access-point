@@ -10,6 +10,10 @@ interface Props {
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  pattern?: string;
+  minlength?: string | number;
+  min?: string | number;
+  max?: string | number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -37,7 +41,7 @@ const updateValue = (event: Event) => {
     <label
       v-if="label"
       :for="inputId"
-      class="block text-sm font-semibold text-gray-700 mb-2"
+      class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
     >
       {{ label }}
       <span v-if="required" class="text-red-500 ml-1">*</span>
@@ -59,13 +63,17 @@ const updateValue = (event: Event) => {
         :placeholder="placeholder"
         :required="required"
         :disabled="disabled"
+        :pattern="pattern"
+        :minlength="minlength"
+        :min="min"
+        :max="max"
         :class="[
           'block w-full rounded-lg text-sm transition-all duration-200',
-          'border-2 shadow-sm bg-white/50 backdrop-blur-sm',
-          'hover:border-gray-400',
+          'border-2 shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100',
+          'hover:border-gray-400 dark:hover:border-gray-500',
           error
-            ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
-            : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200',
+            ? 'border-red-300 focus:border-red-500 focus:ring-red-200 dark:border-red-700 dark:focus:border-red-500'
+            : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200 dark:border-gray-600 dark:focus:border-blue-400',
           $slots.prefix ? 'pl-10' : 'pl-4',
           $slots.suffix ? 'pr-10' : 'pr-4',
           className
@@ -100,7 +108,7 @@ const updateValue = (event: Event) => {
     </p>
 
     <!-- Help text -->
-    <p v-else-if="helpText" class="mt-2 text-sm text-gray-500">
+    <p v-else-if="helpText" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
       {{ helpText }}
     </p>
   </div>
@@ -115,14 +123,14 @@ input {
   @apply appearance-none;
   @apply focus:outline-none;
   @apply focus:ring-4;
-  @apply placeholder:text-gray-400;
+  @apply placeholder:text-gray-400 dark:placeholder:text-gray-500;
 }
 
 input:disabled {
-  @apply bg-gray-50;
+  @apply bg-gray-50 dark:bg-gray-800;
   @apply cursor-not-allowed;
-  @apply border-gray-200;
-  @apply text-gray-500;
+  @apply border-gray-200 dark:border-gray-700;
+  @apply text-gray-500 dark:text-gray-400;
 }
 
 /* Date input styles */
@@ -153,6 +161,6 @@ input:hover:not(:disabled) {
 /* Add a subtle background pattern for empty inputs */
 input:placeholder-shown {
   background-image: linear-gradient(45deg, transparent 97%, #e5e7eb 3%);
-  background-size: 20px 20px;
+  @apply dark:bg-none;
 }
 </style>

@@ -38,8 +38,8 @@ const handleSubmit = () => {
 
 <template>
     <form @submit.prevent="handleSubmit" class="space-y-6">
-        <div class="card bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-bold text-blue-800 mb-4 pb-2 border-b border-blue-100">
+        <div class="card bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-4 pb-2 border-b border-blue-100 dark:border-blue-900">
                 Security Settings
             </h2>
 
@@ -56,19 +56,20 @@ const handleSubmit = () => {
             </div>
         </div>
 
-        <div class="card bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-bold text-blue-800 mb-4 pb-2 border-b border-blue-100">
+        <div class="card bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-4 pb-2 border-b border-blue-100 dark:border-blue-900">
                 Door Lock Settings
             </h2>
 
             <div class="space-y-4">
                 <div class="form-group">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         Door Lock Variant
                     </label>
                     <select v-model="formData.door_lock_variant"
                         :disabled="isDisabled"
-                        class="block w-full rounded-lg border-2 border-gray-300 px-4 py-3">
+                        class="block w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 px-4 py-3 
+                               bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                         <option v-for="variant in doorLockVariants" :key="variant.value" :value="variant.value">
                             {{ variant.label }}
                         </option>
@@ -80,8 +81,8 @@ const handleSubmit = () => {
             </div>
         </div>
 
-        <div class="card bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-bold text-blue-800 mb-4 pb-2 border-b border-blue-100">
+        <div class="card bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-4 pb-2 border-b border-blue-100 dark:border-blue-900">
                 System Settings
             </h2>
 
@@ -101,7 +102,9 @@ const handleSubmit = () => {
         </div>
 
         <button type="submit" :disabled="isLoading || isDisabled"
-            class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            class="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 px-6 rounded-lg 
+                   hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors 
+                   disabled:opacity-50 disabled:cursor-not-allowed">
             <span v-if="isLoading">Saving...</span>
             <span v-else>Save Configuration</span>
         </button>

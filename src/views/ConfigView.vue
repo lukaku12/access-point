@@ -60,15 +60,15 @@ const handleSubmit = async (data: { newAuthKey: string; config: Config }) => {
 <template>
     <div class="max-w-4xl mx-auto py-8 px-4">
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">System Configuration</h1>
-            <p class="text-gray-600">Manage system settings and parameters</p>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">System Configuration</h1>
+            <p class="text-gray-600 dark:text-gray-400">Manage system settings and parameters</p>
         </div>
 
-        <div v-if="error" class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+        <div v-if="error" class="mb-4 p-4 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-200 rounded-lg">
             {{ error }}
         </div>
 
-        <div v-if="success" class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
+        <div v-if="success" class="mb-4 p-4 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-200 rounded-lg">
             {{ success }}
         </div>
 
@@ -80,7 +80,7 @@ const handleSubmit = async (data: { newAuthKey: string; config: Config }) => {
             @submit="handleSubmit" 
         />
 
-        <div v-if="isLoading" class="text-center py-8">
+        <div v-if="isLoading" class="text-center py-8 text-gray-600 dark:text-gray-400">
             Loading configuration...
         </div>
     </div>

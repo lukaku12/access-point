@@ -27,7 +27,7 @@ defineEmits<{
       <div v-if="show" class="fixed inset-0 z-50">
         <!-- Backdrop -->
         <div 
-          class="absolute inset-0 bg-black/50" 
+          class="absolute inset-0 bg-black/50 dark:bg-black/70" 
           @click="$emit('close')"
         ></div>
 
@@ -42,11 +42,11 @@ defineEmits<{
         >
           <div
             v-show="show"
-            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-lg shadow-xl"
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-xl"
           >
-            <div class="p-6">
-              <h3 class="text-lg font-medium text-gray-900 mb-4">{{ title }}</h3>
-              <div class="mb-6">
+            <div class="border-gray-200 dark:border-gray-700 p-6">
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ title }}</h3>
+              <div class="mb-6 text-gray-500 dark:text-gray-300">
                 <slot></slot>
               </div>
               <div class="flex justify-end space-x-4">

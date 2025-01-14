@@ -23,37 +23,37 @@ defineProps<{
 </script>
 
 <template>
-  <div class="overflow-x-auto rounded-lg border border-gray-200/60 shadow-sm">
+  <div class="overflow-x-auto rounded-lg border border-gray-200/60 dark:border-gray-700/60 shadow-sm">
     <!-- Desktop view -->
-    <table class="min-w-full divide-y divide-gray-200/60 hidden md:table">
+    <table class="min-w-full divide-y divide-gray-200/60 dark:divide-gray-700/60 hidden md:table">
       <thead>
         <tr>
           <th
             v-for="column in columns"
             :key="column.key"
-            class="px-6 py-4 bg-gray-50/50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider first:rounded-tl-lg last:rounded-tr-lg"
+            class="px-6 py-4 bg-gray-50/50 dark:bg-gray-800/50 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider first:rounded-tl-lg last:rounded-tr-lg"
           >
             {{ column.label }}
           </th>
           <th
             v-if="actions?.length"
-            class="px-6 py-4 bg-gray-50/50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-tr-lg"
+            class="px-6 py-4 bg-gray-50/50 dark:bg-gray-800/50 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider rounded-tr-lg"
           >
             Actions
           </th>
         </tr>
       </thead>
-      <tbody class="bg-white divide-y divide-gray-200/60">
+      <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200/60 dark:divide-gray-700/60">
         <template v-if="data.length">
           <tr
             v-for="item in data"
             :key="item.id"
-            class="hover:bg-gray-50/50 transition-colors"
+            class="hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors"
           >
             <td
               v-for="column in columns"
               :key="column.key"
-              class="px-6 py-4 whitespace-nowrap"
+              class="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100"
             >
               {{
                 column.format
@@ -83,7 +83,7 @@ defineProps<{
             class="px-6 py-12 text-center"
           >
             <div class="flex flex-col items-center justify-center">
-              <div class="text-gray-400">
+              <div class="text-gray-400 dark:text-gray-500">
                 <svg
                   class="w-16 h-16"
                   fill="none"
@@ -98,7 +98,7 @@ defineProps<{
                   />
                 </svg>
               </div>
-              <p class="mt-4 text-gray-500">
+              <p class="mt-4 text-gray-500 dark:text-gray-400">
                 {{ emptyMessage || 'No data available' }}
               </p>
             </div>
@@ -109,10 +109,10 @@ defineProps<{
 
     <!-- Mobile view -->
     <div class="md:hidden">
-      <div class="bg-gray-50/50 p-4">
+      <div class="bg-gray-50/50 dark:bg-gray-800/50 p-4">
         <template v-if="mobileDisplayKeys">
           <div
-            class="text-xs font-medium text-gray-500 uppercase tracking-wider"
+            class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
           >
             {{
               columns.find((col) => col.key === mobileDisplayKeys?.[0])?.label
@@ -120,12 +120,12 @@ defineProps<{
           </div>
         </template>
       </div>
-      <div class="divide-y divide-gray-200/60">
+      <div class="divide-y divide-gray-200/60 dark:divide-gray-700/60">
         <template v-if="data.length">
           <div
             v-for="item in data"
             :key="item.id"
-            class="bg-white p-4 space-y-3 hover:bg-gray-50/50 transition-colors"
+            class="bg-white dark:bg-gray-900 p-4 space-y-3 hover:bg-gray-50/50 dark:hover:bg-gray-800/50 transition-colors"
           >
             <!-- Primary display for mobile -->
             <div class="flex justify-between items-start">
@@ -136,10 +136,10 @@ defineProps<{
                     :key="key"
                     class="space-y-1"
                   >
-                    <div class="text-sm text-gray-500">
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
                       {{ columns.find((col) => col.key === key)?.label }}
                     </div>
-                    <div class="font-medium">
+                    <div class="font-medium text-gray-900 dark:text-gray-100">
                       {{
                         columns.find((col) => col.key === key)?.format
                           ? columns.find((col) => col.key === key)?.format!(
@@ -167,15 +167,15 @@ defineProps<{
 
             <!-- Rest of the data -->
             <div
-              class="grid grid-cols-2 gap-4 text-sm pt-3 border-t border-gray-100"
+              class="grid grid-cols-2 gap-4 text-sm pt-3 border-t border-gray-100 dark:border-gray-800"
             >
               <template v-for="column in columns" :key="column.key">
                 <div
                   v-if="!mobileDisplayKeys?.includes(column.key)"
                   class="space-y-1"
                 >
-                  <div class="text-gray-500">{{ column.label }}</div>
-                  <div>
+                  <div class="text-gray-500 dark:text-gray-400">{{ column.label }}</div>
+                  <div class="text-gray-900 dark:text-gray-100">
                     {{
                       column.format
                         ? column.format(item[column.key])
@@ -189,9 +189,9 @@ defineProps<{
         </template>
         <div
           v-else
-          class="flex flex-col items-center justify-center py-12 bg-white"
+          class="flex flex-col items-center justify-center py-12 bg-white dark:bg-gray-900"
         >
-          <div class="text-gray-400">
+          <div class="text-gray-400 dark:text-gray-500">
             <svg
               class="w-16 h-16"
               fill="none"
@@ -206,7 +206,7 @@ defineProps<{
               />
             </svg>
           </div>
-          <p class="mt-4 text-gray-500">
+          <p class="mt-4 text-gray-500 dark:text-gray-400">
             {{ emptyMessage || 'No data available' }}
           </p>
         </div>

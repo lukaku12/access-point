@@ -84,8 +84,9 @@ const isNumber = (value: number | string): value is number => {
 
 <style scoped>
 .pagination-arrow-btn {
-  @apply relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300;
-  @apply hover:bg-gray-50 focus:z-20 focus:outline-offset-0;
+  @apply relative inline-flex items-center px-2 py-2 ring-1 ring-inset;
+  @apply text-gray-400 dark:text-gray-400 ring-gray-300 dark:ring-gray-600;
+  @apply hover:bg-gray-50 dark:hover:bg-gray-700 focus:z-20 focus:outline-offset-0;
 }
 
 .pagination-arrow-btn:first-child {
@@ -97,20 +98,22 @@ const isNumber = (value: number | string): value is number => {
 }
 
 .pagination-number-btn {
-  @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300;
+  @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset;
+  @apply ring-gray-300 dark:ring-gray-600;
   @apply focus:z-20 focus:outline-offset-0 transition-colors duration-200;
 }
 
 .pagination-active {
-  @apply z-10 bg-blue-600 text-white ring-blue-600;
-  @apply focus:outline-none hover:bg-blue-700;
+  @apply z-10 bg-blue-600 dark:bg-blue-500 text-white ring-blue-600 dark:ring-blue-500;
+  @apply focus:outline-none hover:bg-blue-700 dark:hover:bg-blue-600;
 }
 
 .pagination-inactive {
-  @apply text-gray-900 hover:bg-gray-50;
+  @apply text-gray-900 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700;
 }
 
 .pagination-ellipsis {
-  @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300;
+  @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold;
+  @apply text-gray-700 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600;
 }
 </style>
