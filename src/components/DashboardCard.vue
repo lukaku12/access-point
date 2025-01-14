@@ -6,18 +6,17 @@ defineProps<{
 </script>
 
 <template>
-  <div class="bg-white rounded-lg shadow-md p-6">
-    <h2 class="text-xl font-semibold text-blue-600 border-b border-blue-100 pb-2 mb-4">
-      {{ title }}
-    </h2>
-    <div v-if="isLoading" class="space-y-3">
-      <div v-for="n in 4" :key="n" class="animate-pulse flex justify-between items-center">
-        <div class="h-4 bg-slate-200 rounded w-1/3"></div>
-        <div class="h-4 bg-slate-200 rounded w-1/4"></div>
+  <div class="bg-white rounded-xl border border-gray-200/60 shadow-lg shadow-gray-200/40 backdrop-blur-sm transition-all duration-200 hover:shadow-xl hover:shadow-gray-200/60">
+    <div class="p-6">
+      <h3 class="text-base font-semibold text-gray-900 flex items-center justify-between">
+        {{ title }}
+        <div v-if="isLoading" class="animate-pulse">
+          <div class="h-4 w-4 bg-gray-200 rounded-full"></div>
+        </div>
+      </h3>
+      <div :class="{ 'opacity-50': isLoading }">
+        <slot></slot>
       </div>
-    </div>
-    <div v-else>
-      <slot></slot>
     </div>
   </div>
 </template>

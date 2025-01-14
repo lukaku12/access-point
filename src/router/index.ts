@@ -22,9 +22,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/cards',
     name: 'cards',
-    component: {
-      render: () => 'cards'
-    },
+    component: () => import('@/views/CardsView.vue'),
     meta: {
       title: 'Cards Management',
       subtitle: 'Manage Access Cards'
