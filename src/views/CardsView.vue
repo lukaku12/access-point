@@ -12,8 +12,16 @@ import CardsTable from '@/components/CardsTable.vue';
 import { usePagination } from '@/composables/usePagination';
 import TablePagination from '@/components/TablePagination.vue'; // Updated import name
 import { isDeleteAllCardsSuccess, isDeleteAllCardsError, isDeleteCardSuccess, isDeleteCardError } from '@/types/card';
+import EditCardForm from '@/components/forms/EditCardForm.vue';
+import { updateCard } from '@/api/cards';
+import { isUpdateCardSuccess, isUpdateCardError } from '@/types/card';
 
 interface AddCardFormExposed {
+  handleSubmit: () => void;
+  isSubmitting: boolean;
+}
+
+interface EditCardFormExposed {
   handleSubmit: () => void;
   isSubmitting: boolean;
 }
@@ -62,6 +70,7 @@ const showDeleteAllModal = ref(false);
 const selectedCard = ref<Card | null>(null);
 
 const addCardForm = ref<AddCardFormExposed | null>(null);
+const editCardForm = ref<EditCardFormExposed | null>(null);
 
 const addNewCard = () => {
   showAddModal.value = true;
@@ -165,6 +174,39 @@ const handleAddCard = async (formData: Partial<Card>) => {
   }
 };
 
+const isEditLoading = ref(false);
+
+const handleEditCard = async (formData: Partial<Card>) => {
+  if (!selectedCard.value) return;
+  
+  isEditLoading.value = true;
+  try {
+    const { data } = await updateCard(selectedCard.value.id, formData);
+
+    if (isUpdateCardSuccess(data)) {
+      await refreshCards();
+      showMessage('Card updated successfully', 'success');
+      showEditModal.value = false;
+    } else if (isUpdateCardError(data)) {
+      if (data.code === 401) {
+        showMessage('Authentication error. Please log in again.', 'error');
+      } else if (data.code === 400) {
+        showMessage(data.error || 'Invalid form data', 'error');
+      } else {
+        showMessage(data.message || 'Failed to update card', 'error');
+      }
+    }
+  } catch (error: any) {
+    console.error('Error updating card:', error);
+    showMessage('An unexpected error occurred while updating the card', 'error');
+  } finally {
+    isEditLoading.value = false;
+    if (editCardForm.value) {
+      editCardForm.value.isSubmitting = false;
+    }
+  }
+};
+
 onMounted(refreshCards);
 </script>
 
@@ -243,9 +285,21 @@ onMounted(refreshCards);
     </Modal>
 
     <!-- Edit Card Modal -->
-    <Modal :show="showEditModal" title="Edit Card" @close="showEditModal = false"
-      @confirm="() => { /* TODO: Implement edit */ showEditModal = false }">
-      <p>Edit card form will go here</p>
+    <Modal 
+      :show="showEditModal" 
+      title="Edit Card" 
+      @close="showEditModal = false"
+      @confirm="editCardForm?.handleSubmit()"
+      :disabled="isEditLoading"
+      :loading="isEditLoading"
+    >
+      <EditCardForm 
+        v-if="selectedCard"
+        ref="editCardForm"
+        :card="selectedCard"
+        :is-loading="isEditLoading"
+        @submit="handleEditCard"
+      />
     </Modal>
 
     <!-- Delete Card Modal -->

@@ -10,13 +10,13 @@ const stats = ref<DashboardApiResponse>({
     wifi: {
         rssi: 0,
         strength: 0,
-        ssid: '',
-        ip: '',
-        mac: ''
+        ssid: 'N/A',
+        ip: 'N/A',
+        mac: 'N/A'
     },
     system: {
         cpu_freq: 0,
-        uptime: '',
+        uptime: 'N/A',
         timestamp: 0
     },
     heap: {

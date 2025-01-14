@@ -136,3 +136,36 @@ export const isDeleteCardError = (
 ): response is DeleteCardErrorResponse => {
   return response.status === 'error';
 };
+
+export interface UpdateCardSuccessResponse extends ApiResponse {
+  status: 'success';
+  code: 200;
+  message: string;
+  data: {
+    id: number;
+    number: string;
+    start_date: string;
+    end_date?: string;
+    timestamp: number;
+  };
+}
+
+export interface UpdateCardErrorResponse extends ApiResponse {
+  status: 'error';
+  code: 400 | 401 | 500;
+  message: string;
+  error?: string;
+  data?: {
+    id: number;
+  };
+}
+
+export type UpdateCardResponse = UpdateCardSuccessResponse | UpdateCardErrorResponse;
+
+export const isUpdateCardSuccess = (response: UpdateCardResponse): response is UpdateCardSuccessResponse => {
+  return response.status === 'success' && response.code === 200;
+};
+
+export const isUpdateCardError = (response: UpdateCardErrorResponse): response is UpdateCardErrorResponse => {
+  return response.status === 'error';
+};

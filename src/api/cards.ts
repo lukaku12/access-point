@@ -1,5 +1,5 @@
 import api from '@/api/axios';
-import type { CardsResponse, ApiResponse, Card, UnregisteredCardsResponse, CreateCardResponse, DeleteAllCardsResponse, DeleteCardResponse } from '@/types/card';
+import type { CardsResponse, Card, UnregisteredCardsResponse, CreateCardResponse, DeleteAllCardsResponse, DeleteCardResponse, UpdateCardResponse } from '@/types/card';
 
 export const fetchCards = (page = 1, perPage = 10) => {
   return api.get<CardsResponse>('/cards', {
@@ -22,8 +22,11 @@ export const createCard = async (cardData: Partial<Card>) => {
   return api.post<CreateCardResponse>('/cards', cardData);
 };
 
-export const updateCard = async (id: number, cardData: Partial<Card>) => {
-  return api.put<ApiResponse>(`/cards/${id}`, cardData);
+export const updateCard = async (cardId: number, cardData: Partial<Card>) => {
+  return api.put<UpdateCardResponse>('/cards', {
+    id: cardId,
+    ...cardData
+  });
 };
 
 export const fetchUnregisteredCards = async () => {
