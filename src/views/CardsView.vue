@@ -195,13 +195,17 @@ onMounted(refreshCards);
     </div>
 
     <!-- Table section with pagination -->
-    <DashboardCard title="Cards List" :isLoading="loading" class="flex-1 flex flex-col min-h-0">
+    <DashboardCard title="" :isLoading="loading" class="flex-1 flex flex-col min-h-0">
       <div class="flex flex-col h-full">
+        <div class="flex-none mb-4 flex items-center justify-end">
+          <TablePagination :current-page="pagination.currentPage" :total-pages="pagination.totalPages"
+            :visible-pages="getVisiblePages" @page-change="handlePageChange" />
+        </div>
         <div class="flex-1 overflow-auto min-h-0">
           <CardsTable :cards="cards" :onEdit="editCard" :onDelete="deleteCard" />
         </div>
         <!-- Pagination controls -->
-        <div class="flex-none mt-4 flex items-center justify-center border-t pt-4">
+        <div class="flex-none mt-4 flex items-center justify-end ">
           <TablePagination :current-page="pagination.currentPage" :total-pages="pagination.totalPages"
             :visible-pages="getVisiblePages" @page-change="handlePageChange" />
         </div>
