@@ -49,9 +49,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/config',
     name: 'config',
-    component: {
-      render: () => 'config'
-    },
+    component: () => import('@/views/ConfigView.vue'),
     meta: {
       title: 'Configuration',
       subtitle: 'System Configuration'
