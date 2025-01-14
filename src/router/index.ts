@@ -58,9 +58,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/firmware-update',
     name: 'firmware-update',
-    component: {
-      render: () => 'firmware-update'
-    },
+    component: () => import('@/views/FirmwareUpdateView.vue'),
     meta: {
       title: 'Firmware Update',
       subtitle: 'Update Device Firmware'

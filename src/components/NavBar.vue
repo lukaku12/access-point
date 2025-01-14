@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { onClickOutside } from '@vueuse/core';
+import BaseModal from '@/components/base/BaseModal.vue';
 
 interface NavLink {
   name: string;
@@ -51,6 +52,36 @@ const navRef = ref<HTMLElement | null>(null);
 onClickOutside(navRef, () => {
   isMenuOpen.value = false;
 });
+
+const showLogoutModal = ref(false);
+
+const handleLogout = () => {
+  showLogoutModal.value = true;
+};
+
+const confirmLogout = () => {
+  // Add your actual logout logic here
+  console.log('Logout confirmed');
+  showLogoutModal.value = false;
+};
+
+const isDarkMode = ref(false);
+const isAnimating = ref(false);
+
+const toggleTheme = async () => {
+  isAnimating.value = true;
+  isDarkMode.value = !isDarkMode.value;
+  document.documentElement.classList.toggle('dark');
+  // Reset animation flag after transition
+  setTimeout(() => {
+    isAnimating.value = false;
+  }, 500);
+};
+
+// Initialize theme on mount
+onMounted(() => {
+  isDarkMode.value = document.documentElement.classList.contains('dark');
+});
 </script>
 
 <template>
@@ -68,27 +99,93 @@ onClickOutside(navRef, () => {
         <div v-if="!isMenuOpen" class="i-heroicons-bars-3-solid w-6 h-6"></div>
         <div v-else class="i-heroicons-x-mark-solid w-6 h-6"></div>
       </button>
-      <span class="font-medium">Menu</span>
+      <div class="flex items-center gap-2">
+        <button
+          @click="toggleTheme"
+          class="relative w-10 h-10 rounded-md hover:bg-blue-600 transition-all flex items-center justify-center overflow-hidden"
+          aria-label="Toggle theme"
+          :disabled="isAnimating"
+        >
+          <div
+            class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
+            :class="[
+              isDarkMode ? 'translate-y-full' : 'translate-y-0'
+            ]"
+          >
+            <div class="i-heroicons-moon-solid w-6 h-6"></div>
+          </div>
+          <div
+            class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
+            :class="[
+              isDarkMode ? 'translate-y-0' : '-translate-y-full'
+            ]"
+          >
+            <div class="i-heroicons-sun-solid w-6 h-6"></div>
+          </div>
+        </button>
+        <button
+          @click="handleLogout"
+          class="p-2 rounded-md hover:bg-blue-600 transition-colors"
+          aria-label="Logout"
+        >
+          <div class="i-heroicons-arrow-right-on-rectangle-solid w-6 h-6"></div>
+        </button>
+      </div>
     </div>
 
     <!-- Desktop Navigation -->
-    <div class="hidden lg:flex justify-center gap-2 p-3">
-      <router-link
-        v-for="link in dashboardNavLinks"
-        :key="link.path"
-        :to="link.path"
-        :class="[
-          'px-4 py-2 rounded-md transition-all flex items-center gap-2',
-          activeRoute === link.name
-            ? 'bg-white text-blue-700'
-            : 'hover:bg-blue-600'
-        ]"
-      >
-        <div :class="[link.icon, 'text-lg']"></div>
-        <span class="text-sm font-medium">
-          {{ link.name.charAt(0).toUpperCase() + link.name.slice(1) }}
-        </span>
-      </router-link>
+    <div class="hidden lg:flex justify-between items-center p-3">
+      <div class="flex gap-2">
+        <router-link
+          v-for="link in dashboardNavLinks"
+          :key="link.path"
+          :to="link.path"
+          :class="[
+            'px-4 py-2 rounded-md transition-all flex items-center gap-2',
+            activeRoute === link.name
+              ? 'bg-white text-blue-700'
+              : 'hover:bg-blue-600'
+          ]"
+        >
+          <div :class="[link.icon, 'text-lg']"></div>
+          <span class="text-sm font-medium">
+            {{ link.name.charAt(0).toUpperCase() + link.name.slice(1) }}
+          </span>
+        </router-link>
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          @click="toggleTheme"
+          class="relative w-10 h-10 rounded-md hover:bg-blue-600 transition-all flex items-center justify-center overflow-hidden"
+          aria-label="Toggle theme"
+          :disabled="isAnimating"
+        >
+          <div
+            class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
+            :class="[
+              isDarkMode ? 'translate-y-full' : 'translate-y-0'
+            ]"
+          >
+            <div class="i-heroicons-moon-solid w-6 h-6"></div>
+          </div>
+          <div
+            class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
+            :class="[
+              isDarkMode ? 'translate-y-0' : '-translate-y-full'
+            ]"
+          >
+            <div class="i-heroicons-sun-solid w-6 h-6"></div>
+          </div>
+        </button>
+        <button
+          @click="handleLogout"
+          class="px-4 py-2 rounded-md hover:bg-blue-600 transition-all flex items-center gap-2"
+          aria-label="Logout"
+        >
+          <div class="i-heroicons-arrow-right-on-rectangle-solid text-lg"></div>
+          <span class="text-sm font-medium">Logout</span>
+        </button>
+      </div>
     </div>
 
     <!-- Mobile Navigation -->
@@ -126,8 +223,21 @@ onClickOutside(navRef, () => {
       </div>
     </Transition>
   </nav>
+
+  <!-- Logout Confirmation Modal -->
+  <BaseModal
+    v-model:show="showLogoutModal"
+    title="Confirm Logout"
+    confirm-text="Logout"
+    @close="showLogoutModal = false"
+    @confirm="confirmLogout"
+  >
+    <p>Are you sure you want to logout?</p>
+  </BaseModal>
 </template>
 
 <style scoped>
-/* Remove unused styles */
+button:disabled {
+  pointer-events: none;
+}
 </style>
