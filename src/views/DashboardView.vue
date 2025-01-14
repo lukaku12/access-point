@@ -27,8 +27,8 @@ const stats = ref<DashboardApiResponse>({
     },
     storage: {
         flash: {
-            size: '',
-            speed: ''
+            size: 'N/A',
+            speed: 'N/A'
         },
         filesystem: {
             total: '',

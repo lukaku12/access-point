@@ -11,12 +11,7 @@ const currentRoute = computed(() => route.name as string || "");
   <div class="min-h-screen bg-gray-50">
     <div class="font-sans antialiased p-8 max-w-7xl mx-auto">
       <!-- Navbar stays at top -->
-      <NavBar :active-route="currentRoute">
-        <template #header>
-          <h1 class="text-3xl font-bold">{{ route.meta.title }}</h1>
-          <p class="text-blue-100">{{ route.meta.subtitle }}</p>
-        </template>
-      </NavBar>
+      <NavBar :active-route="currentRoute"/>
 
       <!-- Content area - vertically centered on large screens -->
       <div class="lg:min-h-[calc(100vh-200px)] lg:flex lg:items-center">

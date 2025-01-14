@@ -14,7 +14,8 @@ const dashboardNavLinks: NavLink[] = [
     { name: 'cards', path: '/cards', icon: 'i-heroicons-credit-card-solid' },
     { name: 'card-reads', path: '/card-reads', icon: 'i-heroicons-document-text-solid' },
     { name: 'wifi', path: '/wifi', icon: 'i-heroicons-wifi-solid' },
-    { name: 'config', path: '/config', icon: 'i-heroicons-cog-6-tooth-solid' }
+    { name: 'config', path: '/config', icon: 'i-heroicons-cog-6-tooth-solid' },
+    { name: 'firmware-update', path: '/firmware-update', icon: 'i-heroicons-cloud-arrow-down-solid' }
 ];
 
 defineProps<{

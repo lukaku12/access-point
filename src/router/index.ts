@@ -31,9 +31,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/card-reads',
     name: 'card-reads',
-    component: {
-      render: () => 'card-reads'
-    },
+    component: () => import('@/views/CardReadsView.vue'),
     meta: {
       title: 'Card Reads',
       subtitle: 'View Card Read History'
@@ -59,6 +57,18 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: 'Configuration',
       subtitle: 'System Configuration'
+    }
+  }
+  ,
+  {
+    path: '/firmware-update',
+    name: 'firmware-update',
+    component: {
+      render: () => 'firmware-update'
+    },
+    meta: {
+      title: 'Firmware Update',
+      subtitle: 'Update Device Firmware'
     }
   }
 ];
