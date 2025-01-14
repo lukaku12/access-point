@@ -70,3 +70,35 @@ export const isCreateCardError = (
 ): response is CreateCardErrorResponse => {
   return response.status === 'error' && response.code === 409;
 };
+
+export interface DeleteAllCardsSuccessResponse {
+  status: 'success';
+  code: 200;
+  message: string;
+  data: {
+    cards_removed: number;
+    timestamp: number;
+  };
+}
+
+export interface DeleteAllCardsErrorResponse {
+  status: 'error';
+  code: 401 | 500;
+  message: string;
+  error?: string;
+}
+
+export type DeleteAllCardsResponse = DeleteAllCardsSuccessResponse | DeleteAllCardsErrorResponse;
+
+// Type guard functions
+export const isDeleteAllCardsSuccess = (
+  response: DeleteAllCardsResponse
+): response is DeleteAllCardsSuccessResponse => {
+  return response.status === 'success' && response.code === 200;
+};
+
+export const isDeleteAllCardsError = (
+  response: DeleteAllCardsResponse
+): response is DeleteAllCardsErrorResponse => {
+  return response.status === 'error';
+};

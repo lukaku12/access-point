@@ -11,6 +11,7 @@ import { isCreateCardSuccess, isCreateCardError } from '@/types/card';
 import CardsTable from '@/components/CardsTable.vue';
 import { usePagination } from '@/composables/usePagination';
 import TablePagination from '@/components/TablePagination.vue'; // Updated import name
+import { isDeleteAllCardsSuccess, isDeleteAllCardsError } from '@/types/card';
 
 interface AddCardFormExposed {
   handleSubmit: () => void;
@@ -98,20 +99,30 @@ const handleDeleteConfirm = async () => {
   showDeleteModal.value = false;
 };
 
+const isDeleteAllLoading = ref(false);
+
 const handleDeleteAllConfirm = async () => {
+  isDeleteAllLoading.value = true;
   try {
     const { data } = await removeAllCards();
-    if (data.status === 'success') {
+
+    if (isDeleteAllCardsSuccess(data)) {
       await refreshCards();
-      showMessage('All cards deleted successfully', 'success');
-    } else {
-      throw new Error(data.message || 'Failed to delete all cards');
+      showMessage(`${data.data.cards_removed} cards deleted successfully`, 'success');
+    } else if (isDeleteAllCardsError(data)) {
+      if (data.code === 401) {
+        showMessage('Authentication error. Please log in again.', 'error');
+      } else {
+        showMessage(data.message || 'Failed to delete all cards', 'error');
+      }
     }
   } catch (error) {
     console.error('Error deleting cards:', error);
-    showMessage(error instanceof Error ? error.message : 'Failed to delete all cards', 'error');
+    showMessage('An unexpected error occurred while deleting cards', 'error');
+  } finally {
+    isDeleteAllLoading.value = false;
+    showDeleteAllModal.value = false;
   }
-  showDeleteAllModal.value = false;
 };
 
 const handleAddCard = async (formData: Partial<Card>) => {
@@ -187,7 +198,8 @@ onMounted(refreshCards);
         <div class="text-2xl font-bold">{{ pagination.totalItems }}</div>
       </DashboardCard>
       <DashboardCard title="Current Page" :isLoading="loading">
-        <div class="text-2xl font-bold">{{ pagination.currentPage }}/{{ pagination.totalPages }}</div>
+        <div class="text-2xl font-bold">{{ pagination.totalPages === 0 ? 0 : pagination.currentPage }}/{{
+          pagination.totalPages }}</div>
       </DashboardCard>
       <DashboardCard title="Per Page" :isLoading="loading">
         <div class="text-2xl font-bold">{{ pagination.perPage }}</div>
@@ -232,7 +244,7 @@ onMounted(refreshCards);
 
     <!-- Delete All Cards Modal -->
     <Modal :show="showDeleteAllModal" title="Delete All Cards" @close="showDeleteAllModal = false"
-      @confirm="handleDeleteAllConfirm">
+      @confirm="handleDeleteAllConfirm" :disabled="isDeleteAllLoading" :loading="isDeleteAllLoading">
       <p>Are you sure you want to delete all cards?</p>
       <p class="text-sm text-gray-500 mt-2">This action cannot be undone.</p>
     </Modal>
