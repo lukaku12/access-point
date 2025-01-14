@@ -21,7 +21,9 @@ defineProps<{
         <tr v-for="read in cardReads" :key="read.id" class="hover:bg-gray-50">
           <td class="table-cell">{{ read.id }}</td>
           <td class="table-cell">{{ read.card_number }}</td>
-          <td class="table-cell">{{ new Date(read.timestamp).toLocaleString() }}</td>
+          <td class="table-cell">
+            {{ new Date(read.timestamp).toLocaleString() }}
+          </td>
           <td class="table-cell">{{ read.type }}</td>
         </tr>
       </tbody>

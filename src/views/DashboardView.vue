@@ -5,50 +5,50 @@ import type { DashboardApiResponse } from '@/types/dashboard';
 import DashboardCard from '@/components/DashboardCard.vue';
 
 const stats = ref<DashboardApiResponse>({
-    api_version: '',
-    status: '',
-    wifi: {
-        rssi: 0,
-        strength: 0,
-        ssid: 'N/A',
-        ip: 'N/A',
-        mac: 'N/A'
+  api_version: '',
+  status: '',
+  wifi: {
+    rssi: 0,
+    strength: 0,
+    ssid: 'N/A',
+    ip: 'N/A',
+    mac: 'N/A'
+  },
+  system: {
+    cpu_freq: 0,
+    uptime: 'N/A',
+    timestamp: 0
+  },
+  heap: {
+    free: '',
+    total: '',
+    minimum: '',
+    usage_percent: 0
+  },
+  storage: {
+    flash: {
+      size: 'N/A',
+      speed: 'N/A'
     },
-    system: {
-        cpu_freq: 0,
-        uptime: 'N/A',
-        timestamp: 0
-    },
-    heap: {
-        free: '',
-        total: '',
-        minimum: '',
-        usage_percent: 0
-    },
-    storage: {
-        flash: {
-            size: 'N/A',
-            speed: 'N/A'
-        },
-        filesystem: {
-            total: '',
-            used: '',
-            free: '',
-            usage_percent: 0
-        }
-    },
-    database: {
-        cards: {
-            total: 0,
-            active: 0,
-            inactive: 0,
-            active_percent: 0,
-        },
-        reads: {
-            today: 0,
-            total: 0,
-        }
+    filesystem: {
+      total: '',
+      used: '',
+      free: '',
+      usage_percent: 0
     }
+  },
+  database: {
+    cards: {
+      total: 0,
+      active: 0,
+      inactive: 0,
+      active_percent: 0
+    },
+    reads: {
+      today: 0,
+      total: 0
+    }
+  }
 });
 
 const lastUpdate = ref('Just now');
@@ -60,29 +60,29 @@ const isVisible = ref(true);
 let statsInterval: number | NodeJS.Timeout;
 
 const updateStats = async () => {
-    try {
-        isLoading.value = true;
-        error.value = null;
-        const { data } = await getDashboardStats();
-        stats.value = data;
-        lastUpdate.value = new Date().toLocaleTimeString();
-    } catch (err: any) {
-        error.value = err.message || 'Failed to fetch stats';
-    } finally {
-        isLoading.value = false;
-        initialLoading.value = false; // Set initial loading to false after first load
-    }
+  try {
+    isLoading.value = true;
+    error.value = null;
+    const { data } = await getDashboardStats();
+    stats.value = data;
+    lastUpdate.value = new Date().toLocaleTimeString();
+  } catch (err: any) {
+    error.value = err.message || 'Failed to fetch stats';
+  } finally {
+    isLoading.value = false;
+    initialLoading.value = false; // Set initial loading to false after first load
+  }
 };
 
 onMounted(() => {
-    updateStats();
-    statsInterval = setInterval(updateStats, 5000);
+  updateStats();
+  statsInterval = setInterval(updateStats, 5000);
 });
 
 onUnmounted(() => {
-    if (statsInterval) {
-        clearInterval(statsInterval);
-    }
+  if (statsInterval) {
+    clearInterval(statsInterval);
+  }
 });
 </script>
 
@@ -93,7 +93,10 @@ onUnmounted(() => {
     </div>
 
     <transition name="fade">
-      <div v-show="isVisible" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        v-show="isVisible"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
         <!-- Network Information -->
         <DashboardCard title="Network Information" :isLoading="initialLoading">
           <div class="space-y-2">
@@ -144,11 +147,15 @@ onUnmounted(() => {
             <div>
               <div class="stat-row mb-2">
                 <span class="stat-label">Heap Usage:</span>
-                <span class="stat-value">{{ stats.heap.usage_percent.toFixed(2) }}%</span>
+                <span class="stat-value"
+                  >{{ stats.heap.usage_percent.toFixed(2) }}%</span
+                >
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
-                <div class="bg-blue-600 h-2.5 rounded-full"
-                    :style="{ width: `${stats.heap.usage_percent}%` }"></div>
+                <div
+                  class="bg-blue-600 h-2.5 rounded-full"
+                  :style="{ width: `${stats.heap.usage_percent}%` }"
+                ></div>
               </div>
               <div class="storage-info">
                 <span class="storage-label">Free:</span>
@@ -161,18 +168,30 @@ onUnmounted(() => {
             <div>
               <div class="stat-row mb-2">
                 <span class="stat-label">Storage Usage:</span>
-                <span class="stat-value">{{ stats.storage.filesystem.usage_percent.toFixed(2) }}%</span>
+                <span class="stat-value"
+                  >{{
+                    stats.storage.filesystem.usage_percent.toFixed(2)
+                  }}%</span
+                >
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2.5 mb-1">
-                <div class="bg-blue-600 h-2.5 rounded-full"
-                    :style="{ width: `${stats.storage.filesystem.usage_percent}%` }"></div>
+                <div
+                  class="bg-blue-600 h-2.5 rounded-full"
+                  :style="{
+                    width: `${stats.storage.filesystem.usage_percent}%`
+                  }"
+                ></div>
               </div>
               <div class="storage-info">
                 <span class="storage-label">Used:</span>
-                <span class="storage-value">{{ stats.storage.filesystem.used }}</span>
+                <span class="storage-value">{{
+                  stats.storage.filesystem.used
+                }}</span>
                 <span class="storage-separator">/</span>
                 <span class="storage-label">Total:</span>
-                <span class="storage-value">{{ stats.storage.filesystem.total }}</span>
+                <span class="storage-value">{{
+                  stats.storage.filesystem.total
+                }}</span>
               </div>
             </div>
           </div>
@@ -191,9 +210,11 @@ onUnmounted(() => {
             </div>
             <div class="stat-row">
               <span class="stat-label">Inactive Cards:</span>
-              <span class="stat-value">{{ stats.database.cards.inactive }}</span>
+              <span class="stat-value">{{
+                stats.database.cards.inactive
+              }}</span>
             </div>
-            <hr>
+            <hr />
             <div class="stat-row">
               <span class="stat-label">Reads Today:</span>
               <span class="stat-value">{{ stats.database.reads.today }}</span>
@@ -202,7 +223,7 @@ onUnmounted(() => {
               <span class="stat-label">Total Reads:</span>
               <span class="stat-value">{{ stats.database.reads.total }}</span>
             </div>
-            <hr>
+            <hr />
           </div>
         </DashboardCard>
       </div>
@@ -217,61 +238,61 @@ onUnmounted(() => {
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 
 .stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.25rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
 }
 
 .stat-label {
-    color: #374151;
-    font-weight: 500;
+  color: #374151;
+  font-weight: 500;
 }
 
 .stat-value {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: #1f2937;
-    min-width: 6.5rem; /* Increased min-width to accommodate fixed decimals */
-    text-align: right;
-    transition: all 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1f2937;
+  min-width: 6.5rem; /* Increased min-width to accommodate fixed decimals */
+  text-align: right;
+  transition: all 0.3s ease;
 }
 
 /* Progress bar colors */
 .bg-blue-600 {
-    transition: width 0.3s ease;
+  transition: width 0.3s ease;
 }
 
 .storage-info {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    color: #4B5563;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
 }
 
 .storage-label {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .storage-value {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    min-width: 4.5rem;
-    display: inline-block;
-    text-align: right;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-width: 4.5rem;
+  display: inline-block;
+  text-align: right;
 }
 
 .storage-separator {
-    color: #9CA3AF;
-    padding: 0 0.25rem;
+  color: #9ca3af;
+  padding: 0 0.25rem;
 }
 </style>

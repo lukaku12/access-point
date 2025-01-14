@@ -56,7 +56,9 @@ export interface CreateCardErrorResponse {
   };
 }
 
-export type CreateCardResponse = CreateCardSuccessResponse | CreateCardErrorResponse;
+export type CreateCardResponse =
+  | CreateCardSuccessResponse
+  | CreateCardErrorResponse;
 
 // Type guard functions
 export const isCreateCardSuccess = (
@@ -88,7 +90,9 @@ export interface DeleteAllCardsErrorResponse {
   error?: string;
 }
 
-export type DeleteAllCardsResponse = DeleteAllCardsSuccessResponse | DeleteAllCardsErrorResponse;
+export type DeleteAllCardsResponse =
+  | DeleteAllCardsSuccessResponse
+  | DeleteAllCardsErrorResponse;
 
 // Type guard functions
 export const isDeleteAllCardsSuccess = (
@@ -123,7 +127,9 @@ export interface DeleteCardErrorResponse {
   };
 }
 
-export type DeleteCardResponse = DeleteCardSuccessResponse | DeleteCardErrorResponse;
+export type DeleteCardResponse =
+  | DeleteCardSuccessResponse
+  | DeleteCardErrorResponse;
 
 export const isDeleteCardSuccess = (
   response: DeleteCardResponse
@@ -160,12 +166,18 @@ export interface UpdateCardErrorResponse extends ApiResponse {
   };
 }
 
-export type UpdateCardResponse = UpdateCardSuccessResponse | UpdateCardErrorResponse;
+export type UpdateCardResponse =
+  | UpdateCardSuccessResponse
+  | UpdateCardErrorResponse;
 
-export const isUpdateCardSuccess = (response: UpdateCardResponse): response is UpdateCardSuccessResponse => {
+export const isUpdateCardSuccess = (
+  response: UpdateCardResponse
+): response is UpdateCardSuccessResponse => {
   return response.status === 'success' && response.code === 200;
 };
 
-export const isUpdateCardError = (response: UpdateCardErrorResponse): response is UpdateCardErrorResponse => {
+export const isUpdateCardError = (
+  response: UpdateCardErrorResponse
+): response is UpdateCardErrorResponse => {
   return response.status === 'error';
 };

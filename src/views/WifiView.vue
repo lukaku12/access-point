@@ -1,68 +1,84 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import DashboardCard from '@/components/DashboardCard.vue';
-import type { Card } from '@/types/card';
+import type { WiFiNetwork } from '@/types/wifi';
 import {
-  fetchCards,
-  removeCard,
-  removeAllCards,
-  createCard
-} from '@/api/cards';
+  fetchWiFiNetworks,
+  removeWiFiNetwork,
+  removeAllWiFiNetworks,
+  createWiFiNetwork,
+  updateWiFiNetwork
+} from '@/api/wifi';
 import BaseModal from '@/components/base/BaseModal.vue';
 import FlashMessage from '@/components/FlashMessage.vue';
 import { useFlashMessage } from '@/composables/useFlashMessage';
-import AddCardForm from '@/components/forms/AddCardForm.vue';
-import { isCreateCardSuccess, isCreateCardError } from '@/types/card';
-import CardsTable from '@/components/CardsTable.vue';
+import WifiTable from '@/components/WifiTable.vue';
 import { usePagination } from '@/composables/usePagination';
-import TablePagination from '@/components/TablePagination.vue'; // Updated import name
+import TablePagination from '@/components/TablePagination.vue';
 import {
-  isDeleteAllCardsSuccess,
-  isDeleteAllCardsError,
-  isDeleteCardSuccess,
-  isDeleteCardError
-} from '@/types/card';
-import EditCardForm from '@/components/forms/EditCardForm.vue';
-import { updateCard } from '@/api/cards';
-import { isUpdateCardSuccess, isUpdateCardError } from '@/types/card';
+  isDeleteWiFiSuccess,
+  isDeleteWiFiError,
+  isDeleteAllWiFiSuccess,
+  isDeleteAllWiFiError,
+  isCreateWiFiSuccess,
+  isCreateWiFiError,
+  isUpdateWiFiSuccess,
+  isUpdateWiFiError
+} from '@/types/wifi';
+import AddWiFiForm from '@/components/forms/AddWiFiForm.vue';
+import EditWiFiForm from '@/components/forms/EditWiFiForm.vue';
 
-interface AddCardFormExposed {
-  handleSubmit: () => void;
-  isSubmitting: boolean;
+interface ApiError {
+  message: string;
+  code?: number;
 }
 
-interface EditCardFormExposed {
-  handleSubmit: () => void;
-  isSubmitting: boolean;
-}
-
-const cards = ref<Card[]>([]);
+const networks = ref<WiFiNetwork[]>([]);
 const loading = ref(true);
-
 const { currentMessage, showMessage, clearMessage } = useFlashMessage();
 const { pagination, getVisiblePages, updatePagination } = usePagination();
 
-const refreshCards = async () => {
+const showDeleteModal = ref(false);
+const showDeleteAllModal = ref(false);
+const selectedNetwork = ref<WiFiNetwork | null>(null);
+const isDeleteLoading = ref(false);
+const isDeleteAllLoading = ref(false);
+
+const showAddModal = ref(false);
+const showEditModal = ref(false);
+
+interface AddWiFiFormExposed {
+  handleSubmit: () => void;
+  isSubmitting: boolean;
+}
+
+interface EditWiFiFormExposed {
+  handleSubmit: () => void;
+  isSubmitting: boolean;
+}
+
+const addWiFiForm = ref<AddWiFiFormExposed | null>(null);
+const editWiFiForm = ref<EditWiFiFormExposed | null>(null);
+
+const refreshNetworks = async () => {
   loading.value = true;
   try {
-    const { data } = await fetchCards(
+    const { data } = await fetchWiFiNetworks(
       pagination.value.currentPage,
       pagination.value.perPage
     );
     if (data.status === 'success') {
-      cards.value = data.data;
+      networks.value = data.data;
       updatePagination({
         totalItems: data.pagination.total,
         currentPage: data.pagination.page,
         totalPages: data.pagination.total_pages,
         perPage: data.pagination.per_page
       });
-    } else {
-      throw new Error('Failed to fetch cards');
     }
   } catch (error) {
-    console.error('Error fetching cards:', error);
-    showMessage('Failed to fetch cards', 'error');
+    console.error('Error fetching networks:', error);
+    showMessage('Failed to fetch WiFi networks', 'error');
   } finally {
     loading.value = false;
   }
@@ -70,166 +86,120 @@ const refreshCards = async () => {
 
 const handlePageChange = async (page: number) => {
   updatePagination({ currentPage: page });
-  await refreshCards();
+  await refreshNetworks();
 };
 
-const showAddModal = ref(false);
-const showEditModal = ref(false);
-const showDeleteModal = ref(false);
-const showDeleteAllModal = ref(false);
-const selectedCard = ref<Card | null>(null);
-
-const addCardForm = ref<AddCardFormExposed | null>(null);
-const editCardForm = ref<EditCardFormExposed | null>(null);
-
-const addNewCard = () => {
-  showAddModal.value = true;
-};
-
-const editCard = (card: Card) => {
-  selectedCard.value = card;
-  showEditModal.value = true;
-};
-
-const deleteCard = (card: Card) => {
-  selectedCard.value = card;
+const deleteNetwork = (network: WiFiNetwork) => {
+  selectedNetwork.value = network;
   showDeleteModal.value = true;
 };
 
-const deleteAllCards = () => {
+const deleteAllNetworks = () => {
   showDeleteAllModal.value = true;
 };
 
-const isDeleteLoading = ref(false);
-
 const handleDeleteConfirm = async () => {
-  if (!selectedCard.value) return;
+  if (!selectedNetwork.value) return;
 
   isDeleteLoading.value = true;
   try {
-    const { data } = await removeCard(selectedCard.value.id);
+    const { data } = await removeWiFiNetwork(selectedNetwork.value.id);
 
-    if (isDeleteCardSuccess(data)) {
-      await refreshCards();
-      showMessage('Card deleted successfully', 'success');
-    } else if (isDeleteCardError(data)) {
-      if (data.code === 401) {
-        showMessage('Authentication error. Please log in again.', 'error');
-      } else if (data.code === 400) {
-        showMessage(data.error || data.message, 'error');
-      } else {
-        showMessage('Failed to delete card', 'error');
-      }
+    if (isDeleteWiFiSuccess(data)) {
+      await refreshNetworks();
+      showMessage('WiFi network deleted successfully', 'success');
+    } else if (isDeleteWiFiError(data)) {
+      showMessage(data.message, 'error');
     }
   } catch (error) {
-    console.error('Error deleting card:', error);
-    showMessage(
-      'An unexpected error occurred while deleting the card',
-      'error'
-    );
+    console.error('Error deleting network:', error);
+    showMessage('An unexpected error occurred', 'error');
   } finally {
     isDeleteLoading.value = false;
     showDeleteModal.value = false;
   }
 };
 
-const isDeleteAllLoading = ref(false);
-
 const handleDeleteAllConfirm = async () => {
   isDeleteAllLoading.value = true;
   try {
-    const { data } = await removeAllCards();
+    const { data } = await removeAllWiFiNetworks();
 
-    if (isDeleteAllCardsSuccess(data)) {
-      await refreshCards();
+    if (isDeleteAllWiFiSuccess(data)) {
+      await refreshNetworks();
       showMessage(
-        `${data.data.cards_removed} cards deleted successfully`,
+        `${data.data.networks_removed} networks deleted successfully`,
         'success'
       );
-    } else if (isDeleteAllCardsError(data)) {
-      if (data.code === 401) {
-        showMessage('Authentication error. Please log in again.', 'error');
-      } else {
-        showMessage(data.message || 'Failed to delete all cards', 'error');
-      }
+    } else if (isDeleteAllWiFiError(data)) {
+      showMessage(data.message, 'error');
     }
   } catch (error) {
-    console.error('Error deleting cards:', error);
-    showMessage('An unexpected error occurred while deleting cards', 'error');
+    console.error('Error deleting all networks:', error);
+    showMessage('An unexpected error occurred', 'error');
   } finally {
     isDeleteAllLoading.value = false;
     showDeleteAllModal.value = false;
   }
 };
 
-const handleAddCard = async (formData: Partial<Card>) => {
-  try {
-    const { data } = await createCard(formData);
+const addNewNetwork = () => {
+  showAddModal.value = true;
+};
 
-    if (isCreateCardSuccess(data)) {
-      await refreshCards();
-      showMessage('Card added successfully', 'success');
+const editNetwork = (network: WiFiNetwork) => {
+  selectedNetwork.value = network;
+  showEditModal.value = true;
+};
+
+const handleAddNetwork = async (formData: Partial<WiFiNetwork>) => {
+  try {
+    const { data } = await createWiFiNetwork(formData);
+    if (isCreateWiFiSuccess(data)) {
+      await refreshNetworks();
+      showMessage('WiFi network added successfully', 'success');
       showAddModal.value = false;
-    } else if (isCreateCardError(data)) {
+    } else if (isCreateWiFiError(data)) {
       showMessage(data.message, 'error');
-    } else {
-      throw new Error('Unexpected response from server');
     }
-  } catch (error: any) {
-    console.error('Error adding card:', error);
-    // Handle error from axios interceptor
-    if (error && typeof error === 'object' && 'message' in error) {
-      showMessage(error.message as string, 'error');
-    } else {
-      showMessage(
-        'An unexpected error occurred while adding the card',
-        'error'
-      );
-    }
+  } catch (error) {
+    console.error('Error adding network:', error);
+    const apiError = error as ApiError;
+    showMessage(apiError?.message || 'Failed to add WiFi network', 'error');
   } finally {
-    if (addCardForm.value) {
-      addCardForm.value.isSubmitting = false;
+    if (addWiFiForm.value) {
+      addWiFiForm.value.isSubmitting = false;
     }
   }
 };
 
-const isEditLoading = ref(false);
+const handleEditNetwork = async (formData: Partial<WiFiNetwork>) => {
+  if (!selectedNetwork.value) return;
 
-const handleEditCard = async (formData: Partial<Card>) => {
-  if (!selectedCard.value) return;
-
-  isEditLoading.value = true;
   try {
-    const { data } = await updateCard(selectedCard.value.id, formData);
-
-    if (isUpdateCardSuccess(data)) {
-      await refreshCards();
-      showMessage('Card updated successfully', 'success');
-      showEditModal.value = false;
-    } else if (isUpdateCardError(data)) {
-      if (data.code === 401) {
-        showMessage('Authentication error. Please log in again.', 'error');
-      } else if (data.code === 400) {
-        showMessage(data.error || 'Invalid form data', 'error');
-      } else {
-        showMessage(data.message || 'Failed to update card', 'error');
-      }
-    }
-  } catch (error: any) {
-    console.error('Error updating card:', error);
-    showMessage(
-      'An unexpected error occurred while updating the card',
-      'error'
+    const { data } = await updateWiFiNetwork(
+      selectedNetwork.value.id,
+      formData
     );
+    if (isUpdateWiFiSuccess(data)) {
+      await refreshNetworks();
+      showMessage('WiFi network updated successfully', 'success');
+      showEditModal.value = false;
+    } else if (isUpdateWiFiError(data)) {
+      showMessage(data.message, 'error');
+    }
+  } catch (error) {
+    console.error('Error updating network:', error);
+    const apiError = error as ApiError;
+    showMessage(apiError?.message || 'Failed to update WiFi network', 'error');
   } finally {
-    isEditLoading.value = false;
-    if (editCardForm.value) {
-      editCardForm.value.isSubmitting = false;
+    if (editWiFiForm.value) {
+      editWiFiForm.value.isSubmitting = false;
     }
   }
 };
 
-onMounted(refreshCards);
+onMounted(refreshNetworks);
 </script>
 
 <template>
@@ -245,7 +215,7 @@ onMounted(refreshCards);
       <div class="flex justify-between items-center">
         <div></div>
         <div class="space-x-4">
-          <button @click="addNewCard" class="btn-success">
+          <button @click="addNewNetwork" class="btn-success">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5 mr-2 inline"
@@ -260,9 +230,9 @@ onMounted(refreshCards);
                 d="M12 4v16m8-8H4"
               />
             </svg>
-            Add Card
+            Add Network
           </button>
-          <button @click="refreshCards" class="btn-primary">
+          <button @click="refreshNetworks" class="btn-primary">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5 mr-2 inline"
@@ -279,12 +249,12 @@ onMounted(refreshCards);
             </svg>
             Refresh
           </button>
-          <button @click="deleteAllCards" class="btn-danger">
+          <button @click="deleteAllNetworks" class="btn-danger">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5 mr-2 inline"
               fill="none"
-              viewBox="0 0 24 24"
+              viewBox="0 24 24"
               stroke="currentColor"
             >
               <path
@@ -302,7 +272,7 @@ onMounted(refreshCards);
 
     <!-- Stats cards section -->
     <div class="flex-none grid grid-cols-1 md:grid-cols-3 gap-4">
-      <DashboardCard title="Total Cards" :isLoading="loading">
+      <DashboardCard title="Total Networks" :isLoading="loading">
         <div class="text-2xl font-bold">{{ pagination.totalItems }}</div>
       </DashboardCard>
       <DashboardCard title="Current Page" :isLoading="loading">
@@ -317,7 +287,7 @@ onMounted(refreshCards);
       </DashboardCard>
     </div>
 
-    <!-- Table section with pagination -->
+    <!-- Table section -->
     <DashboardCard
       title=""
       :isLoading="loading"
@@ -333,13 +303,12 @@ onMounted(refreshCards);
           />
         </div>
         <div class="flex-1 overflow-auto min-h-0">
-          <CardsTable
-            :cards="cards"
-            :onEdit="editCard"
-            :onDelete="deleteCard"
+          <WifiTable
+            :networks="networks"
+            :onEdit="editNetwork"
+            :onDelete="deleteNetwork"
           />
         </div>
-        <!-- Pagination controls -->
         <div class="flex-none mt-4 flex items-center justify-end">
           <TablePagination
             :current-page="pagination.currentPage"
@@ -351,62 +320,58 @@ onMounted(refreshCards);
       </div>
     </DashboardCard>
 
-    <!-- Add Card Modal -->
+    <!-- Modals -->
     <BaseModal
       :show="showAddModal"
-      title="Add New Card"
+      title="Add New Network"
       @close="showAddModal = false"
-      @confirm="addCardForm?.handleSubmit()"
-      :disabled="addCardForm?.isSubmitting"
-      :loading="addCardForm?.isSubmitting"
+      @confirm="addWiFiForm?.handleSubmit()"
+      :disabled="addWiFiForm?.isSubmitting"
+      :loading="addWiFiForm?.isSubmitting"
     >
-      <AddCardForm ref="addCardForm" @submit="handleAddCard" />
+      <AddWiFiForm ref="addWiFiForm" @submit="handleAddNetwork" />
     </BaseModal>
 
-    <!-- Edit Card Modal -->
     <BaseModal
       :show="showEditModal"
-      title="Edit Card"
+      title="Edit Network"
       @close="showEditModal = false"
-      @confirm="editCardForm?.handleSubmit()"
-      :disabled="isEditLoading"
-      :loading="isEditLoading"
+      @confirm="editWiFiForm?.handleSubmit()"
+      :disabled="editWiFiForm?.isSubmitting"
+      :loading="editWiFiForm?.isSubmitting"
     >
-      <EditCardForm
-        v-if="selectedCard"
-        ref="editCardForm"
-        :card="selectedCard"
-        :is-loading="isEditLoading"
-        @submit="handleEditCard"
+      <EditWiFiForm
+        v-if="selectedNetwork"
+        ref="editWiFiForm"
+        :network="selectedNetwork"
+        @submit="handleEditNetwork"
       />
     </BaseModal>
 
-    <!-- Delete Card Modal -->
+    <!-- Delete modals -->
     <BaseModal
       :show="showDeleteModal"
-      title="Delete Card"
+      title="Delete Network"
       @close="showDeleteModal = false"
       @confirm="handleDeleteConfirm"
       :disabled="isDeleteLoading"
       :loading="isDeleteLoading"
     >
-      <p>Are you sure you want to delete this card?</p>
-      <p v-if="selectedCard" class="text-sm text-gray-500 mt-2">
-        Card Number: {{ selectedCard.number }}
+      <p>Are you sure you want to delete this network?</p>
+      <p v-if="selectedNetwork" class="text-sm text-gray-500 mt-2">
+        SSID: {{ selectedNetwork.ssid }}
       </p>
-      <p class="text-sm text-gray-500 mt-2">This action cannot be undone.</p>
     </BaseModal>
 
-    <!-- Delete All Cards Modal -->
     <BaseModal
       :show="showDeleteAllModal"
-      title="Delete All Cards"
+      title="Delete All Networks"
       @close="showDeleteAllModal = false"
       @confirm="handleDeleteAllConfirm"
       :disabled="isDeleteAllLoading"
       :loading="isDeleteAllLoading"
     >
-      <p>Are you sure you want to delete all cards?</p>
+      <p>Are you sure you want to delete all networks?</p>
       <p class="text-sm text-gray-500 mt-2">This action cannot be undone.</p>
     </BaseModal>
   </div>
@@ -467,7 +432,6 @@ onMounted(refreshCards);
   0% {
     transform: translateX(-100%);
   }
-
   100% {
     transform: translateX(100%);
   }

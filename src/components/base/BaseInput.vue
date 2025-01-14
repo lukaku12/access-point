@@ -15,7 +15,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   type: 'text',
   required: false,
-  disabled: false,
+  disabled: false
 });
 
 const emit = defineEmits<{
@@ -34,18 +34,18 @@ const updateValue = (event: Event) => {
 
 <template>
   <div class="input-wrapper">
-    <label 
-      v-if="label" 
+    <label
+      v-if="label"
       :for="inputId"
       class="block text-sm font-semibold text-gray-700 mb-2"
     >
       {{ label }}
       <span v-if="required" class="text-red-500 ml-1">*</span>
     </label>
-    
+
     <div class="relative">
       <!-- Prefix slot -->
-      <div 
+      <div
         v-if="$slots.prefix"
         class="absolute left-0 inset-y-0 flex items-center pl-3"
       >
@@ -63,8 +63,8 @@ const updateValue = (event: Event) => {
           'block w-full rounded-lg text-sm transition-all duration-200',
           'border-2 shadow-sm bg-white/50 backdrop-blur-sm',
           'hover:border-gray-400',
-          error 
-            ? 'border-red-300 focus:border-red-500 focus:ring-red-200' 
+          error
+            ? 'border-red-300 focus:border-red-500 focus:ring-red-200'
             : 'border-gray-300 focus:border-blue-500 focus:ring-blue-200',
           $slots.prefix ? 'pl-10' : 'pl-4',
           $slots.suffix ? 'pr-10' : 'pr-4',
@@ -77,7 +77,7 @@ const updateValue = (event: Event) => {
       />
 
       <!-- Suffix slot -->
-      <div 
+      <div
         v-if="$slots.suffix"
         class="absolute right-0 inset-y-0 flex items-center pr-3"
       >
@@ -86,22 +86,21 @@ const updateValue = (event: Event) => {
     </div>
 
     <!-- Error message -->
-    <p 
-      v-if="error"
-      class="mt-2 text-sm text-red-600 flex items-center gap-1"
-    >
+    <p v-if="error" class="mt-2 text-sm text-red-600 flex items-center gap-1">
       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none">
-        <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path
+          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
       </svg>
       {{ error }}
     </p>
 
     <!-- Help text -->
-    <p 
-      v-else-if="helpText"
-      class="mt-2 text-sm text-gray-500"
-    >
+    <p v-else-if="helpText" class="mt-2 text-sm text-gray-500">
       {{ helpText }}
     </p>
   </div>
@@ -127,11 +126,11 @@ input:disabled {
 }
 
 /* Date input styles */
-input[type="date"] {
+input[type='date'] {
   @apply cursor-pointer;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+input[type='date']::-webkit-calendar-picker-indicator {
   @apply absolute inset-0;
   @apply appearance-none;
   @apply bg-transparent;

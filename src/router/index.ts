@@ -40,9 +40,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/wifi',
     name: 'wifi',
-    component: {
-      render: () => 'wifi'
-    },
+    component: () => import('@/views/WifiView.vue'),
     meta: {
       title: 'WiFi Settings',
       subtitle: 'Configure Network Settings'
@@ -58,8 +56,7 @@ const routes: RouteRecordRaw[] = [
       title: 'Configuration',
       subtitle: 'System Configuration'
     }
-  }
-  ,
+  },
   {
     path: '/firmware-update',
     name: 'firmware-update',

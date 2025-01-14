@@ -1,5 +1,13 @@
 import api from '@/api/axios';
-import type { CardsResponse, Card, UnregisteredCardsResponse, CreateCardResponse, DeleteAllCardsResponse, DeleteCardResponse, UpdateCardResponse } from '@/types/card';
+import type {
+  CardsResponse,
+  Card,
+  UnregisteredCardsResponse,
+  CreateCardResponse,
+  DeleteAllCardsResponse,
+  DeleteCardResponse,
+  UpdateCardResponse
+} from '@/types/card';
 
 export const fetchCards = (page = 1, perPage = 10) => {
   return api.get<CardsResponse>('/cards', {

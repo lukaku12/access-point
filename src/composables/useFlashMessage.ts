@@ -9,7 +9,10 @@ const currentMessage = ref<FlashMessage | null>(null);
 let timeout: number | null = null;
 
 export function useFlashMessage() {
-  const showMessage = (message: string, type: FlashMessage['type'] = 'info') => {
+  const showMessage = (
+    message: string,
+    type: FlashMessage['type'] = 'info'
+  ) => {
     if (timeout) {
       clearTimeout(timeout);
     }

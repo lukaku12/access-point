@@ -43,7 +43,9 @@ export interface OperationError {
 
 export type ApiError = AuthError | OperationError;
 
-export function isDeleteAllCardReadsSuccess(data: any): data is DeleteAllCardReadsSuccess {
+export function isDeleteAllCardReadsSuccess(
+  data: any
+): data is DeleteAllCardReadsSuccess {
   return data.status === 'success' && data.code === 200;
 }
 

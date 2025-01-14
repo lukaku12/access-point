@@ -11,14 +11,14 @@ const props = defineProps<{
 const columns = [
   { key: 'id', label: 'ID' },
   { key: 'number', label: 'Number' },
-  { 
-    key: 'personal_id', 
+  {
+    key: 'personal_id',
     label: 'Personal ID',
     format: (value: string | null) => value || 'N/A'
   },
   { key: 'start_date', label: 'Start Date' },
-  { 
-    key: 'end_date', 
+  {
+    key: 'end_date',
     label: 'End Date',
     format: (value: string | null) => value || 'N/A'
   }
