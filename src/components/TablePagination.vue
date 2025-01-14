@@ -38,8 +38,8 @@ const isNumber = (value: number | string): value is number => {
             </span>
         </template>
 
-        <button @click="emit('page-change', currentPage + 1)" :disabled="currentPage === totalPages"
-            class="pagination-arrow-btn" :class="{ 'opacity-50 cursor-not-allowed': currentPage === totalPages }">
+        <button @click="emit('page-change', currentPage + 1)" :disabled="totalPages === 0 || totalPages === 1 || currentPage === totalPages"
+            class="pagination-arrow-btn" :class="{ 'opacity-50 cursor-not-allowed': currentPage === totalPages || totalPages === 0 || totalPages === 1 }">
             <span class="sr-only">Next</span>
             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd"
