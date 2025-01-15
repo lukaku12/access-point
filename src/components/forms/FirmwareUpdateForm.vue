@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import { uploadFirmware } from '@/api/firmwareUpdate';
 import type { UploadState } from '@/types/firmwareUpdate';
 import BaseModal from '@/components/base/BaseModal.vue';
+import FlashMessage from '@/components/FlashMessage.vue';
 
 const state = ref<UploadState>({
   isDragging: false,
@@ -14,6 +15,7 @@ const state = ref<UploadState>({
 
 const showConfirmModal = ref(false);
 const fileInputRef = ref<HTMLInputElement | null>(null);
+const flashMessage = ref<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
 const dragEvents = {
   dragenter: (e: DragEvent) => {
@@ -35,11 +37,25 @@ const dragEvents = {
   }
 };
 
+const MAX_FIRMWARE_SIZE = 2 * 1024 * 1024; // 2MB max size
+
 const handleFileSelect = (file: File) => {
   if (!file.name.endsWith('.bin')) {
     state.value.error = 'Please select a valid firmware file (.bin)';
     return;
   }
+  
+  if (file.size > MAX_FIRMWARE_SIZE) {
+    state.value.error = `File size (${(file.size / 1024 / 1024).toFixed(2)}MB) exceeds maximum allowed size (2MB)`;
+    return;
+  }
+
+  console.debug('[Firmware Update] File selected:', {
+    name: file.name,
+    size: `${(file.size / 1024 / 1024).toFixed(2)}MB`,
+    type: file.type
+  });
+
   state.value.file = file;
   state.value.error = null;
 };
@@ -60,21 +76,27 @@ const startUpload = async () => {
   showConfirmModal.value = false;
 
   try {
+    console.debug('[Firmware Update] Starting upload process');
     state.value.isUploading = true;
     state.value.error = null;
     state.value.progress = 0;
 
-    const progressInterval = setInterval(() => {
-      if (state.value.progress < 90) {
-        // More controlled progress increments
-        state.value.progress += 0.5;
-      }
-    }, 200);
+    flashMessage.value = {
+      message: 'Starting firmware update...',
+      type: 'info'
+    };
 
-    await uploadFirmware(state.value.file);
+    await uploadFirmware(
+      state.value.file,
+      (progress) => {
+        state.value.progress = progress;
+      }
+    );
     
-    clearInterval(progressInterval);
-    state.value.progress = 100;
+    flashMessage.value = {
+      message: 'Firmware update successful! Device will restart.',
+      type: 'success'
+    };
     
     // Reset after successful upload
     setTimeout(() => {
@@ -88,7 +110,12 @@ const startUpload = async () => {
     }, 2000);
 
   } catch (error: any) {
+    console.error('[Firmware Update] Upload failed:', error);
     state.value.error = error.message || 'Upload failed';
+    flashMessage.value = {
+      message: `Firmware update failed: ${error.message || 'Unknown error'}`,
+      type: 'error'
+    };
   } finally {
     state.value.isUploading = false;
   }
@@ -101,6 +128,14 @@ const confirmUpload = () => {
 
 <template>
   <div class="max-w-xl mx-auto p-4 min-h-[calc(100vh-152px)]">
+    <FlashMessage
+      v-if="flashMessage"
+      :message="flashMessage.message"
+      :type="flashMessage.type"
+      :duration="5000"
+      @close="flashMessage = null"
+    />
+    
     <!-- Warning Banner -->
     <div class="mb-6 bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 p-4">
       <div class="flex">
@@ -120,7 +155,7 @@ const confirmUpload = () => {
 
     <!-- Upload Area -->
     <div
-      class="relative bg-white dark:bg-gray-800 shadow-sm rounded-lg"
+      class="relative shadow-sm rounded-lg"
       @dragenter="dragEvents.dragenter"
       @dragleave="dragEvents.dragleave"
       @dragover="dragEvents.dragover"
@@ -136,7 +171,7 @@ const confirmUpload = () => {
       
       <div
         :class="[
-          'border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200',
+          'border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 bg-white dark:bg-gray-800',
           state.isDragging ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30' : 'border-gray-300 dark:border-gray-600',
           state.isUploading ? 'pointer-events-none opacity-50' : 'hover:border-blue-500'
         ]"
@@ -156,7 +191,9 @@ const confirmUpload = () => {
           </div>
           <div v-if="state.file" class="text-sm bg-blue-50 dark:bg-blue-900/30 p-2 rounded">
             <span class="font-medium text-blue-700 dark:text-blue-400">Selected file:</span>
-            <span class="text-blue-600 dark:text-blue-300">{{ state.file.name }}</span>
+            <span class="text-blue-600 dark:text-blue-300">
+              {{ state.file.name }} ({{ (state.file.size / 1024 / 1024).toFixed(2) }}MB)
+            </span>
           </div>
         </div>
       </div>
