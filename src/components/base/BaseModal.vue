@@ -64,7 +64,7 @@ onBeforeUnmount(() => {
         >
           <div
             v-show="show"
-            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-xl no-scrollbar"
+            class="absolute max-w-[90vw] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full sm:max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-xl no-scrollbar"
           >
             <div class="border-gray-200 dark:border-gray-700 p-6">
               <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ title }}</h3>
