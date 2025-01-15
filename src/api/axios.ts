@@ -1,5 +1,5 @@
 import axios, { type AxiosError } from 'axios';
-import type { ConnectionDetails } from '@/types/auth';
+import type { ConnectionDetails } from '@/types/login';
 
 const getBaseUrl = () => {
   const connection = localStorage.getItem('connection');

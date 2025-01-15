@@ -65,7 +65,9 @@ const handleLogout = () => {
 const confirmLogout = () => {
   // Add your actual logout logic here
   logout();
-  router.push({ name: 'landing' });
+  setTimeout(() => {
+    router.push({ name: 'landing' });
+  }, 500);
   console.log('Logout confirmed');
   showLogoutModal.value = false;
 };

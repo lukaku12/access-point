@@ -99,6 +99,7 @@ onUnmounted(() => {
       >
         <!-- Network Information -->
         <DashboardCard title="Network Information" :isLoading="initialLoading">
+          <hr class="border-gray-200 dark:border-gray-700 my-2" />
           <div class="space-y-2">
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">SSID:</span>
@@ -121,6 +122,7 @@ onUnmounted(() => {
 
         <!-- System Information -->
         <DashboardCard title="System Information" :isLoading="initialLoading">
+          <hr class="border-gray-200 dark:border-gray-700 my-2" />
           <div class="space-y-2">
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">CPU Frequency:</span>
@@ -143,6 +145,7 @@ onUnmounted(() => {
 
         <!-- Memory & Storage -->
         <DashboardCard title="Memory & Storage" :isLoading="initialLoading">
+          <hr class="border-gray-200 dark:border-gray-700 my-2" />
           <div class="space-y-4">
             <div>
               <div class="stat-row mb-2">
@@ -199,6 +202,7 @@ onUnmounted(() => {
 
         <!-- Database Statistics -->
         <DashboardCard title="Database Statistics" :isLoading="initialLoading">
+          <hr class="border-gray-200 dark:border-gray-700 my-2" />
           <div class="space-y-2">
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Total Cards:</span>
@@ -223,7 +227,6 @@ onUnmounted(() => {
               <span class="stat-label dark:text-gray-300">Total Reads:</span>
               <span class="stat-value dark:text-gray-100">{{ stats.database.reads.total }}</span>
             </div>
-            <hr class="border-gray-200 dark:border-gray-700" />
           </div>
         </DashboardCard>
       </div>

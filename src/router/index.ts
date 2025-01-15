@@ -91,7 +91,11 @@ const router = createRouter({
 });
 
 router.beforeEach((to, _, next) => {
-  if (!to.meta.public && !isAuthorized()) {
+  const auth = isAuthorized();
+
+  if (to.name === 'login' && auth) {
+    next({ name: 'dashboard' });
+  } else if (!to.meta.public && !auth) {
     next({ name: 'login' });
   } else {
     next();

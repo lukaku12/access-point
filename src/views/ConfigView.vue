@@ -59,17 +59,23 @@ const handleSubmit = async (data: { newAuthKey: string; config: Config }) => {
 
 <template>
     <div class="max-w-4xl h-full min-h-[calc(100vh-152px)] mx-auto py-8 px-4">
-        <div class="mb-8">
+        <div class="mb-4">
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">System Configuration</h1>
             <p class="text-gray-600 dark:text-gray-400">Manage system settings and parameters</p>
         </div>
 
-        <div v-if="error" class="mb-4 p-4 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-200 rounded-lg">
-            {{ error }}
-        </div>
-
-        <div v-if="success" class="mb-4 p-4 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-200 rounded-lg">
-            {{ success }}
+        <div class="mb-4 h-[60px]">
+            <transition name="fade" mode="out-in">
+            <div v-if="error" class="p-4 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-200 rounded-lg">
+                {{ error }}
+            </div>
+            <div v-else-if="success" class="p-4 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-200 rounded-lg">
+                {{ success }}
+            </div>
+            <div v-else class="p-4">
+                &nbsp;
+            </div>
+            </transition>
         </div>
 
         <ConfigForm 
