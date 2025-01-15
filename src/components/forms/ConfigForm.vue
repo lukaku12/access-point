@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import BaseInput from '../base/BaseInput.vue';
 import BaseCheckbox from '../base/BaseCheckbox.vue';
-import type { Config, DoorLockVariant } from '@/types/config';
+import BaseSelectInput from '../base/BaseSelectInput.vue';
+import BaseNumberInput from '../base/BaseNumberInput.vue';
+import { useFormValidation } from '@/composables/useFormValidation';
+import type { Config, ConfigPayload, DoorLockVariant, ConfigUpdatePayload } from '@/types/config';
 
 interface Props {
     config: Config;
@@ -17,22 +20,76 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-    (e: 'submit', data: { newAuthKey: string; config: Config }): void;
+    (e: 'submit', data: ConfigUpdatePayload): void;
+    (e: 'error', message: string): void;
 }>();
 
+const { errors, validateField, isValid } = useFormValidation();
+
+const msToSeconds = (ms: number) => Math.round(ms / 1000);
+const secondsToMs = (seconds: number) => seconds * 1000;
+
 const newAuthKey = ref('');
-const formData = ref<Config>({ ...props.config });
+const formData = ref<Config>({
+    ...props.config,
+    door_lock_duration: msToSeconds(props.config.door_lock_duration)
+});
+
+// Watch for config changes from parent
+watch(() => props.config, (newConfig) => {
+    formData.value = {
+        ...newConfig,
+        door_lock_duration: msToSeconds(newConfig.door_lock_duration)
+    };
+}, { deep: true });
 
 const doorLockVariants: { value: DoorLockVariant; label: string }[] = [
     { value: 'SOLENOID', label: 'Solenoid' },
     { value: 'MAGNETIC', label: 'Magnetic' }
 ];
 
+// Validation rules
+const validationRules = {
+    door_lock_variant: {
+        required: (v: string) => !!v || 'Door lock variant is required',
+    },
+    door_lock_duration: {
+        required: (v: number) => v > 0 || 'Door lock duration is required',
+        range: (v: number) => (v >= 1 && v <= 30) || 'Duration must be between 1 and 30 seconds'
+    }
+};
+
+// Validate all fields
+const validateForm = (): boolean => {
+    let isFormValid = true;
+
+    // Validate main fields
+    isFormValid = validateField('door_lock_variant', formData.value.door_lock_variant, validationRules.door_lock_variant) && isFormValid;
+    isFormValid = validateField('door_lock_duration', formData.value.door_lock_duration, validationRules.door_lock_duration) && isFormValid;
+
+    // Validate new auth key if provided
+    if (newAuthKey.value) {
+        isFormValid = validateField('new_auth_key', newAuthKey.value, {
+            format: (v: string) => /^[A-Za-z0-9]{4,}$/.test(v) || 'Authentication key must be at least 4 alphanumeric characters'
+        }) && isFormValid;
+    }
+
+    return isFormValid;
+};
+
 const handleSubmit = () => {
-    emit('submit', {
-        newAuthKey: newAuthKey.value,
-        config: formData.value
-    });
+    if (!validateForm()) return;
+    
+    const configPayload: ConfigPayload = {
+        current_auth_key: props.currentAuthKey,
+        auth_key: newAuthKey.value || props.currentAuthKey,
+        door_lock_variant: formData.value.door_lock_variant,
+        door_lock_duration: secondsToMs(formData.value.door_lock_duration),
+        run_program_without_time: formData.value.run_program_without_time,
+        active: formData.value.active
+    };
+
+    emit('submit', { config: configPayload });
 };
 </script>
 
@@ -62,22 +119,26 @@ const handleSubmit = () => {
             </h2>
 
             <div class="space-y-4">
-                <div class="form-group">
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Door Lock Variant
-                    </label>
-                    <select v-model="formData.door_lock_variant"
-                        :disabled="isDisabled"
-                        class="block w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 px-4 py-3 
-                               bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                        <option v-for="variant in doorLockVariants" :key="variant.value" :value="variant.value">
-                            {{ variant.label }}
-                        </option>
-                    </select>
-                </div>
+                <BaseSelectInput
+                    v-model="formData.door_lock_variant"
+                    :options="doorLockVariants"
+                    label="Door Lock Variant"
+                    required
+                    :error="errors.door_lock_variant"
+                    :disabled="isDisabled"
+                />
 
-                <BaseInput v-model="formData.door_lock_duration" type="number" label="Door Lock Duration (seconds)"
-                    :min="1" :max="30" required :disabled="isDisabled" />
+                <BaseNumberInput
+                    v-model="formData.door_lock_duration"
+                    label="Door Lock Duration"
+                    help-text="Duration in seconds (1-30 seconds)"
+                    :error="errors.door_lock_duration"
+                    :min="1"
+                    :max="30"
+                    :step="1"
+                    required
+                    :disabled="isDisabled"
+                />
             </div>
         </div>
 
@@ -101,11 +162,19 @@ const handleSubmit = () => {
             </div>
         </div>
 
-        <button type="submit" :disabled="isLoading || isDisabled"
+        <button type="submit" 
+            :disabled="isLoading || isDisabled || !isValid"
             class="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 px-6 rounded-lg 
                    hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors 
-                   disabled:opacity-50 disabled:cursor-not-allowed">
-            <span v-if="isLoading">Saving...</span>
+                   disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+            <span v-if="isLoading" class="flex items-center justify-center">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Saving...
+            </span>
             <span v-else>Save Configuration</span>
         </button>
     </form>
