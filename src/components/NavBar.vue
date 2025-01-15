@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { onClickOutside } from '@vueuse/core';
 import BaseModal from '@/components/base/BaseModal.vue';
@@ -14,17 +14,17 @@ interface NavLink {
 }
 
 const dashboardNavLinks: NavLink[] = [
-  { name: 'dashboard', path: '/dashboard', icon: 'i-heroicons-home-solid' },
-  { name: 'cards', path: '/cards', icon: 'i-heroicons-credit-card-solid' },
+  { name: 'Dashboard', path: '/dashboard', icon: 'i-heroicons-home-solid' },
+  { name: 'Cards', path: '/cards', icon: 'i-heroicons-credit-card-solid' },
   {
-    name: 'card-reads',
+    name: 'Card Reads',
     path: '/card-reads',
     icon: 'i-heroicons-document-text-solid'
   },
-  { name: 'wifi', path: '/wifi', icon: 'i-heroicons-wifi-solid' },
-  { name: 'config', path: '/config', icon: 'i-heroicons-cog-6-tooth-solid' },
+  { name: 'Wifi', path: '/wifi', icon: 'i-heroicons-wifi-solid' },
+  { name: 'Config', path: '/config', icon: 'i-heroicons-cog-6-tooth-solid' },
   {
-    name: 'firmware-update',
+    name: 'Firmware Update',
     path: '/firmware-update',
     icon: 'i-heroicons-cloud-arrow-down-solid'
   }
@@ -35,6 +35,9 @@ defineProps<{
 }>();
 
 const route = useRoute();
+
+// Add computed property for current route
+const currentRoute = computed(() => route.path);
 
 const isMenuOpen = ref(false);
 
@@ -82,6 +85,13 @@ const handleThemeToggle = async () => {
   setTimeout(() => {
     isAnimating.value = false;
   }, 500);
+};
+
+// Add this function to format the text
+const formatDisplayText = (text: string) => {
+  return text.split(' ').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join(' ');
 };
 </script>
 
@@ -139,14 +149,14 @@ const handleThemeToggle = async () => {
           :to="link.path"
           :class="[
             'px-4 py-2 rounded-md transition-all flex items-center gap-2',
-            activeRoute === link.name
+            currentRoute === link.path
               ? 'bg-white text-blue-700'
               : 'hover:bg-blue-600'
           ]"
         >
           <div :class="[link.icon, 'text-lg']"></div>
           <span class="text-sm font-medium">
-            {{ link.name.charAt(0).toUpperCase() + link.name.slice(1) }}
+            {{ formatDisplayText(link.name) }}
           </span>
         </router-link>
       </div>
@@ -201,7 +211,7 @@ const handleThemeToggle = async () => {
             :to="link.path"
             :class="[
               'px-4 py-3 rounded-md transition-all flex items-center gap-3 justify-center',
-              activeRoute === link.name
+              currentRoute === link.path
                 ? 'bg-white text-blue-700'
                 : 'hover:bg-blue-600'
             ]"
@@ -209,7 +219,7 @@ const handleThemeToggle = async () => {
           >
             <div :class="[link.icon, 'text-lg']"></div>
             <span class="font-medium">
-              {{ link.name.charAt(0).toUpperCase() + link.name.slice(1) }}
+              {{ formatDisplayText(link.name) }}
             </span>
           </router-link>
         </div>

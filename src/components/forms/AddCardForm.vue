@@ -126,18 +126,18 @@ onMounted(loadUnregisteredCards);
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-8 max-w-2xl mx-auto">
+  <form @submit.prevent="handleSubmit" class="space-y-4 sm:space-y-8 w-full max-w-2xl mx-auto px-4 sm:px-0">
     <!-- Card Details Section -->
     <div
-      class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40 hover:shadow-xl hover:shadow-gray-200/60 dark:hover:shadow-gray-900/60 transition-all duration-200"
+      class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40 hover:shadow-xl hover:shadow-gray-200/60 dark:hover:shadow-gray-900/60 transition-all duration-200"
     >
-      <div class="space-y-6">
-        <div class="flex items-center justify-between">
+      <div class="space-y-4 sm:space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h4 class="text-lg font-semibold text-gray-900 dark:text-white">Card Details</h4>
           <button
             type="button"
             @click="loadUnregisteredCards"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200 gap-2"
+            class="inline-flex items-center px-3 sm:px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200 gap-2"
             :disabled="isLoading"
           >
             <svg
@@ -206,10 +206,10 @@ onMounted(loadUnregisteredCards);
 
     <!-- Validity Period Section -->
     <div
-      class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40 hover:shadow-xl hover:shadow-gray-200/60 dark:hover:shadow-gray-900/60 transition-all duration-200"
+      class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40 hover:shadow-xl hover:shadow-gray-200/60 dark:hover:shadow-gray-900/60 transition-all duration-200"
     >
-      <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Validity Period</h4>
-      <div class="grid grid-cols-2 gap-8">
+      <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 sm:mb-6">Validity Period</h4>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
         <BaseInput
           v-model="formData.start_date"
           type="date"
@@ -348,5 +348,18 @@ input[type='date']::-webkit-calendar-picker-indicator {
 /* Update hover effect for dark mode */
 .dark .hover\:shadow-xl:hover {
   filter: brightness(1.1);
+}
+
+/* Add responsive styles */
+@media (max-width: 640px) {
+  .overflow-auto::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  input[type='date'],
+  input[type='text'],
+  input[type='number'] {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
 }
 </style>

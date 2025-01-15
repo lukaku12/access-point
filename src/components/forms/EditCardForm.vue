@@ -88,10 +88,10 @@ defineExpose({
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-8 max-w-2xl mx-auto">
+  <form @submit.prevent="handleSubmit" class="space-y-4 sm:space-y-8 w-full max-w-2xl mx-auto px-4 sm:px-0">
     <!-- Card Details Section -->
     <div
-      class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40"
+      class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40"
     >
       <div class="space-y-6">
         <div class="flex items-center justify-between">
@@ -122,10 +122,10 @@ defineExpose({
 
     <!-- Validity Period Section -->
     <div
-      class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40"
+      class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl border border-gray-200/60 dark:border-gray-700/60 shadow-lg shadow-gray-200/40 dark:shadow-gray-900/40"
     >
-      <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Validity Period</h4>
-      <div class="grid grid-cols-2 gap-8">
+      <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 sm:mb-6">Validity Period</h4>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
         <BaseInput
           v-model="formData.start_date"
           type="date"
