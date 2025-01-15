@@ -72,6 +72,16 @@ const routes: RouteRecordRaw[] = [
       title: 'Firmware Update',
       subtitle: 'Update Device Firmware'
     }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: () => import('@/views/NotFoundView.vue'),
+    meta: {
+      title: 'Page Not Found',
+      subtitle: '404 Error',
+      public: true
+    }
   }
 ];
 

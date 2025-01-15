@@ -4,23 +4,24 @@ import { useRoute } from 'vue-router';
 import NavBar from '@/components/NavBar.vue';
 
 const route = useRoute();
-const isLoginPage = computed(() => route.name === 'login');
+const hideNavbar = computed(() => route.name === 'login' || route.name === 'not-found');
 const currentRoute = computed(() => (route.name as string) || '');
 </script>
 
 <template>
   <div 
-  :class="{
-    'min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200': !isLoginPage,
-    'overflow-y-hidden': isLoginPage
-  }"
-  class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    :class="{
+      'min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200': !hideNavbar,
+      'overflow-y-hidden': hideNavbar
+    }"
+    class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200"
+  >
     <div class="font-sans antialiased p-8 max-w-7xl mx-auto">
       <!-- Navbar stays at top -->
-      <NavBar v-if="!isLoginPage" :active-route="currentRoute" />
+      <NavBar v-if="!hideNavbar" :active-route="currentRoute" />
 
       <!-- Content area - vertically centered on large screens -->
-      <div :class="{ 'lg:min-h-[calc(100vh-200px)] lg:flex lg:items-center': !isLoginPage }">
+      <div :class="{ 'lg:min-h-[calc(100vh-200px)] lg:flex lg:items-center': !hideNavbar }">
         <router-view v-slot="{ Component }">
           <Transition name="fade" mode="out-in">
             <component :is="Component" class="w-full" />
