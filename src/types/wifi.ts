@@ -4,72 +4,98 @@ export interface WiFiNetwork {
   password: string;
 }
 
-interface ApiResponse {
-  status: string;
+// Base interface for API responses
+interface ApiResponseBase {
   code: number;
   message: string;
 }
 
-interface PaginationData {
-  page: number;
-  per_page: number;
-  total: number;
-  total_pages: number;
+// Success and Error response interfaces
+export interface ApiSuccessResponse extends ApiResponseBase {
+  status: 'success';
 }
 
-export interface GetWiFiNetworksResponse extends ApiResponse {
+export interface ApiErrorResponse extends ApiResponseBase {
+  status: 'error';
+}
+
+// Remove unused ApiResponse type
+
+export interface WiFiCredentials {
+  ssid: string;
+  password: string;
+}
+
+export interface CurrentConnection {
+  ssid: string;
+  ip: string;
+  mac: string;
+}
+
+export interface GetWiFiNetworksResponse extends ApiSuccessResponse {
   data: WiFiNetwork[];
-  pagination: PaginationData;
+  timestamp: number;
+  current_connection: CurrentConnection;
 }
 
-export interface CreateWiFiResponse extends ApiResponse {
+export interface CreateWiFiResponse extends ApiSuccessResponse {
+  timestamp: number;
+  data: WiFiCredentials;
+}
+
+export interface UpdateWiFiResponse extends ApiSuccessResponse {
   data: WiFiNetwork;
 }
 
-export interface UpdateWiFiResponse extends ApiResponse {
-  data: WiFiNetwork;
-}
-
-export interface DeleteWiFiResponse extends ApiResponse {
+export interface DeleteWiFiResponse extends ApiSuccessResponse {
   data: { deleted: boolean };
 }
 
-export interface DeleteAllWiFiResponse extends ApiResponse {
-  data: { networks_removed: number };
+export interface DeleteAllWiFiResponse extends ApiSuccessResponse {
+  timestamp: number;
+  data: {
+    cleared_count: number;
+    default_credentials_preserved: boolean;
+  };
 }
 
-export const isCreateWiFiSuccess = (data: any): data is CreateWiFiResponse => {
-  return data.status === 'success' && data.data?.id;
+// Type guards with proper typing
+export const isCreateWiFiSuccess = (data: unknown): data is CreateWiFiResponse => {
+  const response = data as Partial<CreateWiFiResponse>;
+  return response?.status === 'success';
 };
 
-export const isCreateWiFiError = (data: any): data is ApiResponse => {
-  return data.status === 'error';
+export const isCreateWiFiError = (data: unknown): data is ApiErrorResponse => {
+  const response = data as Partial<ApiErrorResponse>;
+  return response?.status === 'error' && !!response?.message;
 };
 
-export const isUpdateWiFiSuccess = (data: any): data is UpdateWiFiResponse => {
-  return data.status === 'success' && data.data?.id;
+export const isUpdateWiFiSuccess = (data: unknown): data is UpdateWiFiResponse => {
+  const response = data as Partial<UpdateWiFiResponse>;
+  return response?.status === 'success';
 };
 
-export const isUpdateWiFiError = (data: any): data is ApiResponse => {
-  return data.status === 'error';
+export const isUpdateWiFiError = (data: unknown): data is ApiErrorResponse => {
+  const response = data as Partial<ApiErrorResponse>;
+  return response?.status === 'error' && !!response?.message;
 };
 
-export const isDeleteWiFiSuccess = (data: any): data is DeleteWiFiResponse => {
-  return data.status === 'success' && data.data?.deleted === true;
+export const isDeleteWiFiSuccess = (data: unknown): data is DeleteWiFiResponse => {
+  const response = data as Partial<DeleteWiFiResponse>;
+  return response?.status === 'success';
 };
 
-export const isDeleteWiFiError = (data: any): data is ApiResponse => {
-  return data.status === 'error';
+export const isDeleteWiFiError = (data: unknown): data is ApiErrorResponse => {
+  const response = data as Partial<ApiErrorResponse>;
+  return response?.status === 'error' && !!response?.message;
 };
 
-export const isDeleteAllWiFiSuccess = (
-  data: any
-): data is DeleteAllWiFiResponse => {
-  return (
-    data.status === 'success' && typeof data.data?.networks_removed === 'number'
-  );
+export const isDeleteAllWiFiSuccess = (data: unknown): data is DeleteAllWiFiResponse => {
+  const response = data as Partial<DeleteAllWiFiResponse>;
+  return response?.status === 'success';
 };
 
-export const isDeleteAllWiFiError = (data: any): data is ApiResponse => {
-  return data.status === 'error';
+export const isDeleteAllWiFiError = (data: unknown): data is ApiErrorResponse => {
+  const response = data as Partial<ApiErrorResponse>;
+  return response?.status === 'error' && !!response?.message;
 };

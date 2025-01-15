@@ -1,6 +1,7 @@
 import api from '@/api/axios'; // Update this import to match your axios setup
 import type {
   WiFiNetwork,
+  WiFiCredentials,
   GetWiFiNetworksResponse,
   CreateWiFiResponse,
   UpdateWiFiResponse,
@@ -8,27 +9,30 @@ import type {
   DeleteAllWiFiResponse
 } from '@/types/wifi';
 
-export const fetchWiFiNetworks = (page: number, perPage: number) => {
-  return api.get<GetWiFiNetworksResponse>('/wifi', {
-    params: { page, per_page: perPage }
-  });
+export const fetchWiFiNetworks = () => {
+  return api.get<GetWiFiNetworksResponse>('/wifi-credentials');
 };
 
-export const createWiFiNetwork = (network: Partial<WiFiNetwork>) => {
-  return api.post<CreateWiFiResponse>('/wifi', network);
+export const createWiFiNetwork = (network: WiFiCredentials) => {
+  return api.post<CreateWiFiResponse>('/wifi-credentials', {
+    credentials: network
+  });
 };
 
 export const updateWiFiNetwork = (
   id: number,
   network: Partial<WiFiNetwork>
 ) => {
-  return api.put<UpdateWiFiResponse>(`/wifi/${id}`, network);
+  return api.put<UpdateWiFiResponse>('/wifi-credentials', {
+    id,
+    ...network
+  });
 };
 
 export const removeWiFiNetwork = (id: number) => {
-  return api.delete<DeleteWiFiResponse>(`/wifi/${id}`);
+  return api.delete<DeleteWiFiResponse>(`/wifi-credentials?credential_id=${id}`);
 };
 
 export const removeAllWiFiNetworks = () => {
-  return api.delete<DeleteAllWiFiResponse>('/wifi');
+  return api.post<DeleteAllWiFiResponse>('/clear-wifi-credentials');
 };

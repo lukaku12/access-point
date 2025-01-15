@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { WiFiNetwork } from '@/types/wifi';
+import type { WiFiCredentials } from '@/types/wifi';
 import BaseInput from '@/components/base/BaseInput.vue';
 import { useFormValidation } from '@/composables/useFormValidation';
 
 const emit = defineEmits<{
-  (e: 'submit', form: Partial<WiFiNetwork>): void;
+  (e: 'submit', form: WiFiCredentials): void;
 }>();
 
 const ssid = ref('');

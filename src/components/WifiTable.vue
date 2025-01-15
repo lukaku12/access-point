@@ -9,10 +9,27 @@ const props = defineProps<{
   loading: boolean;
 }>();
 
+const isDefaultNetwork = (network: WiFiNetwork) => network.id === 1;
+
 const columns = [
-  { key: 'id', label: 'ID' },
-  { key: 'ssid', label: 'SSID' },
-  { key: 'password', label: 'Password' }
+  { 
+    key: 'id', 
+    label: 'ID',
+    cellClass: (item: WiFiNetwork) => 
+      isDefaultNetwork(item) ? 'font-extrabold text-2xl text-yellow-500 dark:text-yellow-400' : ''
+  },
+  { 
+    key: 'ssid', 
+    label: 'SSID',
+    cellClass: (item: WiFiNetwork) => 
+      isDefaultNetwork(item) ? 'font-extrabold text-2xl text-yellow-500 dark:text-yellow-400' : ''
+  },
+  { 
+    key: 'password', 
+    label: 'Password',
+    cellClass: (item: WiFiNetwork) => 
+      isDefaultNetwork(item) ? 'font-extrabold text-2xl text-yellow-500 dark:text-yellow-400' : ''
+  }
 ];
 
 const actions = [
@@ -23,7 +40,8 @@ const actions = [
     color: 'blue-600',
     hoverColor: 'blue-700',
     darkColor: 'blue-500',
-    darkHoverColor: 'blue-600'
+    darkHoverColor: 'blue-600',
+    show: (network: WiFiNetwork) => !isDefaultNetwork(network)
   },
   {
     label: 'Delete',
@@ -32,9 +50,16 @@ const actions = [
     color: 'red-600',
     hoverColor: 'red-700',
     darkColor: 'red-500',
-    darkHoverColor: 'red-600'
+    darkHoverColor: 'red-600',
+    show: (network: WiFiNetwork) => !isDefaultNetwork(network)
   }
 ];
+
+const getRowClass = (item: WiFiNetwork) => {
+  return isDefaultNetwork(item) 
+    ? 'bg-yellow-50 dark:bg-yellow-900/20 cursor-not-allowed border-l-4 border-yellow-500' 
+    : '';
+};
 </script>
 
 <template>
@@ -46,5 +71,6 @@ const actions = [
     :loading="loading"
     empty-message="No WiFi networks found"
     class="text-gray-900 dark:text-gray-100"
+    :row-class="getRowClass"
   />
 </template>

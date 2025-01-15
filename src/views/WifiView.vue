@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import DashboardCard from '@/components/DashboardCard.vue';
-import type { WiFiNetwork } from '@/types/wifi';
+import type { 
+  WiFiNetwork, 
+  CurrentConnection, 
+  WiFiCredentials,
+  ApiErrorResponse 
+} from '@/types/wifi';
 import {
   fetchWiFiNetworks,
   removeWiFiNetwork,
@@ -13,13 +18,9 @@ import BaseModal from '@/components/base/BaseModal.vue';
 import FlashMessage from '@/components/FlashMessage.vue';
 import { useFlashMessage } from '@/composables/useFlashMessage';
 import WifiTable from '@/components/WifiTable.vue';
-import { usePagination } from '@/composables/usePagination';
-import TablePagination from '@/components/TablePagination.vue';
 import {
   isDeleteWiFiSuccess,
-  isDeleteWiFiError,
   isDeleteAllWiFiSuccess,
-  isDeleteAllWiFiError,
   isCreateWiFiSuccess,
   isCreateWiFiError,
   isUpdateWiFiSuccess,
@@ -28,15 +29,10 @@ import {
 import AddWiFiForm from '@/components/forms/AddWiFiForm.vue';
 import EditWiFiForm from '@/components/forms/EditWiFiForm.vue';
 
-interface ApiError {
-  message: string;
-  code?: number;
-}
-
 const networks = ref<WiFiNetwork[]>([]);
 const loading = ref(true);
+const currentConnection = ref<CurrentConnection | null>(null);
 const { currentMessage, showMessage, clearMessage } = useFlashMessage();
-const { pagination, getVisiblePages, updatePagination } = usePagination();
 
 const showDeleteModal = ref(false);
 const showDeleteAllModal = ref(false);
@@ -63,33 +59,25 @@ const editWiFiForm = ref<EditWiFiFormExposed | null>(null);
 const refreshNetworks = async () => {
   loading.value = true;
   try {
-    const { data } = await fetchWiFiNetworks(
-      pagination.value.currentPage,
-      pagination.value.perPage
-    );
+    const { data } = await fetchWiFiNetworks();
     if (data.status === 'success') {
       networks.value = data.data;
-      updatePagination({
-        totalItems: data.pagination.total,
-        currentPage: data.pagination.page,
-        totalPages: data.pagination.total_pages,
-        perPage: data.pagination.per_page
-      });
+      currentConnection.value = data.current_connection;
     }
   } catch (error) {
     console.error('Error fetching networks:', error);
-    showMessage('Failed to fetch WiFi networks', 'error');
+    const apiError = error as ApiErrorResponse;
+    showMessage(apiError?.message || 'Failed to fetch WiFi networks', 'error');
   } finally {
     loading.value = false;
   }
 };
 
-const handlePageChange = async (page: number) => {
-  updatePagination({ currentPage: page });
-  await refreshNetworks();
-};
-
 const deleteNetwork = (network: WiFiNetwork) => {
+  if (network.id === 1) {
+    showMessage('Default network cannot be deleted', 'error');
+    return;
+  }
   selectedNetwork.value = network;
   showDeleteModal.value = true;
 };
@@ -104,19 +92,20 @@ const handleDeleteConfirm = async () => {
   isDeleteLoading.value = true;
   try {
     const { data } = await removeWiFiNetwork(selectedNetwork.value.id);
-
     if (isDeleteWiFiSuccess(data)) {
-      await refreshNetworks();
       showMessage('WiFi network deleted successfully', 'success');
-    } else if (isDeleteWiFiError(data)) {
-      showMessage(data.message, 'error');
+      showDeleteModal.value = false;
+      await refreshNetworks();
+    } else {
+      const errorData = data as unknown as ApiErrorResponse;
+      showMessage(errorData?.message || 'Failed to delete network', 'error');
     }
   } catch (error) {
     console.error('Error deleting network:', error);
-    showMessage('An unexpected error occurred', 'error');
+    const apiError = error as ApiErrorResponse;
+    showMessage(apiError?.message || 'An unexpected error occurred', 'error');
   } finally {
     isDeleteLoading.value = false;
-    showDeleteModal.value = false;
   }
 };
 
@@ -124,22 +113,25 @@ const handleDeleteAllConfirm = async () => {
   isDeleteAllLoading.value = true;
   try {
     const { data } = await removeAllWiFiNetworks();
-
     if (isDeleteAllWiFiSuccess(data)) {
+      const clearedCount = data.data.cleared_count;
+      const preservedMsg = data.data.default_credentials_preserved ? ' (default network preserved)' : '';
+      const message = clearedCount > 0 
+        ? `Successfully cleared ${clearedCount} WiFi credentials${preservedMsg}` 
+        : 'No WiFi credentials were cleared';
+      showMessage(message, 'success');
+      showDeleteAllModal.value = false;
       await refreshNetworks();
-      showMessage(
-        `${data.data.networks_removed} networks deleted successfully`,
-        'success'
-      );
-    } else if (isDeleteAllWiFiError(data)) {
-      showMessage(data.message, 'error');
+    } else {
+      const errorData = data as unknown as ApiErrorResponse;
+      showMessage(errorData?.message || 'Failed to clear networks', 'error');
     }
   } catch (error) {
     console.error('Error deleting all networks:', error);
-    showMessage('An unexpected error occurred', 'error');
+    const apiError = error as ApiErrorResponse;
+    showMessage(apiError?.message || 'An unexpected error occurred', 'error');
   } finally {
     isDeleteAllLoading.value = false;
-    showDeleteAllModal.value = false;
   }
 };
 
@@ -148,23 +140,28 @@ const addNewNetwork = () => {
 };
 
 const editNetwork = (network: WiFiNetwork) => {
+  if (network.id === 1) {
+    showMessage('Default network cannot be edited', 'error');
+    return;
+  }
   selectedNetwork.value = network;
   showEditModal.value = true;
 };
 
-const handleAddNetwork = async (formData: Partial<WiFiNetwork>) => {
+const handleAddNetwork = async (formData: WiFiCredentials) => {
   try {
     const { data } = await createWiFiNetwork(formData);
     if (isCreateWiFiSuccess(data)) {
       await refreshNetworks();
-      showMessage('WiFi network added successfully', 'success');
+      showMessage('WiFi credentials added successfully', 'success');
       showAddModal.value = false;
     } else if (isCreateWiFiError(data)) {
-      showMessage(data.error || 'Unknown error occurred', 'error');
+      const errorData = data as ApiErrorResponse;
+      showMessage(errorData.message || 'Unknown error', 'error');
     }
   } catch (error) {
     console.error('Error adding network:', error);
-    const apiError = error as ApiError;
+    const apiError = error as ApiErrorResponse;
     showMessage(apiError?.message || 'Failed to add WiFi network', 'error');
   } finally {
     if (addWiFiForm.value) {
@@ -186,11 +183,12 @@ const handleEditNetwork = async (formData: Partial<WiFiNetwork>) => {
       showMessage('WiFi network updated successfully', 'success');
       showEditModal.value = false;
     } else if (isUpdateWiFiError(data)) {
-      showMessage(data.message, 'error');
+      const errorData = data as ApiErrorResponse;
+      showMessage(errorData.message || 'Unknown error', 'error');
     }
   } catch (error) {
     console.error('Error updating network:', error);
-    const apiError = error as ApiError;
+    const apiError = error as ApiErrorResponse;
     showMessage(apiError?.message || 'Failed to update WiFi network', 'error');
   } finally {
     if (editWiFiForm.value) {
@@ -270,55 +268,37 @@ onMounted(refreshNetworks);
       </div>
     </div>
 
-    <!-- Stats cards section -->
+    <!-- Current Connection Stats -->
     <div class="flex-none grid grid-cols-1 md:grid-cols-3 gap-4">
-      <DashboardCard title="Total Networks" :isLoading="loading">
-        <div class="text-2xl font-bol dark:text-white">{{ pagination.totalItems }}</div>
-      </DashboardCard>
-      <DashboardCard title="Current Page" :isLoading="loading">
+      <DashboardCard title="Current SSID" :isLoading="loading">
         <div class="text-2xl font-bold dark:text-white">
-          {{ pagination.totalPages === 0 ? 0 : pagination.currentPage }}/{{
-            pagination.totalPages
-          }}
+          {{ currentConnection?.ssid || 'N/A' }}
         </div>
       </DashboardCard>
-      <DashboardCard title="Per Page" :isLoading="loading">
-        <div class="text-2xl font-bold dark:text-white">{{ pagination.perPage }}</div>
+      <DashboardCard title="IP Address" :isLoading="loading">
+        <div class="text-2xl font-bold dark:text-white">
+          {{ currentConnection?.ip || 'N/A' }}
+        </div>
+      </DashboardCard>
+      <DashboardCard title="MAC Address" :isLoading="loading">
+        <div class="text-2xl font-bold dark:text-white">
+          {{ currentConnection?.mac || 'N/A' }}
+        </div>
       </DashboardCard>
     </div>
 
-    <!-- Table section -->
+    <!-- Simplified Table Section -->
     <DashboardCard
       title=""
       :isLoading="loading"
-      class="flex flex-col min-h-0"
+      class="flex-col min-h-0"
     >
-      <div class="flex flex-col h-full">
-        <div class="flex-none mb-4 flex items-center justify-end">
-          <TablePagination
-            :current-page="pagination.currentPage"
-            :total-pages="pagination.totalPages"
-            :visible-pages="getVisiblePages"
-            @page-change="handlePageChange"
-          />
-        </div>
-        <div class="flex-1 overflow-auto min-h-0">
-          <WifiTable
-            :networks="networks"
-            :onEdit="editNetwork"
-            :onDelete="deleteNetwork"
-            :loading="loading"
-          />
-        </div>
-        <div class="flex-none mt-4 flex items-center justify-end">
-          <TablePagination
-            :current-page="pagination.currentPage"
-            :total-pages="pagination.totalPages"
-            :visible-pages="getVisiblePages"
-            @page-change="handlePageChange"
-          />
-        </div>
-      </div>
+      <WifiTable
+        :networks="networks"
+        :onEdit="editNetwork"
+        :onDelete="deleteNetwork"
+        :loading="loading"
+      />
     </DashboardCard>
 
     <!-- Modals -->
@@ -440,37 +420,5 @@ onMounted(refreshNetworks);
   100% {
     transform: translateX(100%);
   }
-}
-
-.btn-pagination {
-  @apply px-3 py-1 border rounded-md text-sm;
-  @apply hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50;
-  @apply disabled:opacity-50 disabled:cursor-not-allowed;
-}
-
-.pagination-arrow-btn {
-  @apply relative inline-flex items-center px-2 py-2 ring-1 ring-inset;
-  @apply text-gray-400 dark:text-gray-400 ring-gray-300 dark:ring-gray-600;
-  @apply hover:bg-gray-50 dark:hover:bg-gray-700 focus:z-20 focus:outline-offset-0;
-}
-
-.pagination-number-btn {
-  @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset;
-  @apply ring-gray-300 dark:ring-gray-600;
-  @apply focus:z-20 focus:outline-offset-0 transition-colors duration-200;
-}
-
-.pagination-active {
-  @apply z-10 bg-blue-600 dark:bg-blue-500 text-white ring-blue-600 dark:ring-blue-500;
-  @apply focus:outline-none hover:bg-blue-700 dark:hover:bg-blue-600;
-}
-
-.pagination-inactive {
-  @apply text-gray-900 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700;
-}
-
-.pagination-ellipsis {
-  @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold;
-  @apply text-gray-700 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600;
 }
 </style>
