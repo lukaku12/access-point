@@ -208,6 +208,7 @@ onMounted(refreshCardReads);
             :columns="tableColumns"
             :data="cardReads"
             :mobile-display-keys="['number', 'timestamp']"
+            :loading="loading"
             empty-message="No card reads available"
           />
         </div>

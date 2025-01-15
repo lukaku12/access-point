@@ -6,6 +6,7 @@ const props = defineProps<{
   cards: Card[];
   onEdit: (card: Card) => void;
   onDelete: (card: Card) => void;
+  loading: boolean;
 }>();
 
 const columns = [
@@ -50,5 +51,6 @@ const mobileDisplayKeys = ['number'];
     :data="cards"
     :actions="actions"
     :mobile-display-keys="mobileDisplayKeys"
+    :loading="loading"
   />
 </template>

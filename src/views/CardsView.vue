@@ -337,6 +337,7 @@ onMounted(refreshCards);
             :cards="cards"
             :onEdit="editCard"
             :onDelete="deleteCard"
+            :loading="loading"
           />
         </div>
         <!-- Pagination controls -->

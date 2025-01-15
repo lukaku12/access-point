@@ -6,6 +6,7 @@ const props = defineProps<{
   networks: WiFiNetwork[];
   onEdit: (network: WiFiNetwork) => void;
   onDelete: (network: WiFiNetwork) => void;
+  loading: boolean;
 }>();
 
 const columns = [
@@ -42,6 +43,7 @@ const actions = [
     :data="networks"
     :actions="actions"
     :mobile-display-keys="['ssid', 'password']"
+    :loading="loading"
     empty-message="No WiFi networks found"
     class="text-gray-900 dark:text-gray-100"
   />

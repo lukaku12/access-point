@@ -307,6 +307,7 @@ onMounted(refreshNetworks);
             :networks="networks"
             :onEdit="editNetwork"
             :onDelete="deleteNetwork"
+            :loading="loading"
           />
         </div>
         <div class="flex-none mt-4 flex items-center justify-end">
