@@ -19,16 +19,14 @@
         @blur="validateField('ip', formData.ip, validationRules.ip)"
         required
       />
-      <BaseInput
+      <BaseNumberInput
         v-model="formData.port"
-        :error="errors.port"
         label="Port"
-        placeholder="80"
-        type="number"
-        autocomplete="off"
-        name="port"
-        @blur="validateField('port', formData.port, validationRules.port)"
+        :min="1"
+        :max="65535"
+        :error="errors.port"
         required
+        @blur="validateField('port', formData.port, validationRules.port)"
       />
       <BaseInput
         v-model="formData.authKey"
@@ -56,6 +54,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { login } from '@/api/login'
 import BaseInput from '@/components/base/BaseInput.vue'
+import BaseNumberInput from '@/components/base/BaseNumberInput.vue'
 import FlashMessage from '@/components/FlashMessage.vue'
 import { useFormValidation } from '@/composables/useFormValidation'
 
@@ -72,7 +71,7 @@ const { errors, validateField, isValid } = useFormValidation()
 
 const formData = reactive({
   ip: '',
-  port: '',
+  port: 80, // Changed to number with default value
   authKey: ''
 })
 
@@ -108,7 +107,7 @@ const handleSubmit = async () => {
     isSubmitting.value = true
     const success = await login(
       formData.ip,
-      Number(formData.port),
+      formData.port, // No need to convert to Number anymore
       formData.authKey
     )
     

@@ -105,11 +105,14 @@ const handleSubmit = () => {
                     :model-value="currentAuthKey"
                     label="Current Authentication Key" 
                     :disabled="true"
+                    required
                 />
 
                 <BaseInput v-model="newAuthKey" label="New Authentication Key" placeholder="Enter new auth key"
                     help-text="Only alphanumeric characters allowed, minimum 4 characters" pattern="[A-Za-z0-9]+"
-                    minlength="4" :disabled="isDisabled" />
+                    minlength="4" :disabled="isDisabled" 
+                    />
+                    
             </div>
         </div>
 
@@ -152,12 +155,14 @@ const handleSubmit = () => {
                     v-model="formData.run_program_without_time"
                     label="Run Program Without Time Check"
                     :disabled="isDisabled"
+                    required
                 />
 
                 <BaseCheckbox
                     v-model="formData.active"
                     label="System Is Active"
                     :disabled="isDisabled"
+                    required
                 />
             </div>
         </div>

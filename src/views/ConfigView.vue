@@ -64,6 +64,14 @@ const handleSubmit = async (data: { config: ConfigPayload }) => {
         };
         authKey.value = response.auth_key;
 
+        // Update auth_key in localStorage
+        const connectionData = localStorage.getItem('connection');
+        if (connectionData) {
+            const connection = JSON.parse(connectionData);
+            connection.auth_key = response.auth_key;
+            localStorage.setItem('connection', JSON.stringify(connection));
+        }
+
         flash.value = {
             type: 'success',
             message: 'Configuration saved successfully!'

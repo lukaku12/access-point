@@ -3,11 +3,13 @@ interface Props {
   modelValue: boolean;
   label?: string;
   disabled?: boolean;
+  required?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {
   label: '',
-  disabled: false
+  disabled: false,
+  required: false
 });
 
 const emit = defineEmits<{
@@ -20,7 +22,9 @@ const emit = defineEmits<{
     'opacity-75 cursor-not-allowed': disabled,
     'cursor-pointer': !disabled
   }">
-    <span v-if="label" class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ label }}</span>
+    <span v-if="label" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+      {{ label }} <span v-if="required" class="text-red-500">*</span>
+    </span>
     <div class="relative">
       <input
         type="checkbox"

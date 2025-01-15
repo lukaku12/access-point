@@ -6,11 +6,13 @@ interface Props {
   options: { value: string; label: string }[];
   label?: string;
   disabled?: boolean;
+  required?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   label: '',
-  disabled: false
+  disabled: false,
+  required: false
 });
 
 const emit = defineEmits<{
@@ -47,7 +49,7 @@ const getSelectedLabel = () => {
 <template>
   <div class="form-group" ref="selectRef">
     <label v-if="label" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-      {{ label }}
+      {{ label }} <span v-if="required" class="text-red-500">*</span>
     </label>
     <div class="relative">
       <button
