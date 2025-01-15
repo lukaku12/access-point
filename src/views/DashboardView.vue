@@ -48,6 +48,13 @@ const stats = ref<DashboardApiResponse>({
       today: 0,
       total: 0
     }
+  },
+  time: {
+    datetime: 'N/A',
+    is_valid: false,
+    time_source: 'N/A',
+    timezone: 'N/A',
+    timestamp: 0
   }
 });
 
@@ -226,6 +233,33 @@ onUnmounted(() => {
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Total Reads:</span>
               <span class="stat-value dark:text-gray-100">{{ stats.database.reads.total }}</span>
+            </div>
+          </div>
+        </DashboardCard>
+
+        <!-- Time Information -->
+        <DashboardCard title="Time Information" :isLoading="initialLoading">
+          <hr class="border-gray-200 dark:border-gray-700 my-2" />
+          <div class="space-y-2">
+            <div class="stat-row">
+              <span class="stat-label dark:text-gray-300">Date & Time:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.time.datetime }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label dark:text-gray-300">Time Stamp:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.time.timestamp }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label dark:text-gray-300">Time Source:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.time.time_source }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label dark:text-gray-300">Timezone:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.time.timezone }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label dark:text-gray-300">Status:</span>
+              <span class="stat-value dark:text-gray-100">{{ stats.time.is_valid ? 'Valid' : 'Invalid' }}</span>
             </div>
           </div>
         </DashboardCard>

@@ -6,6 +6,7 @@ export interface DashboardApiResponse {
   heap: HeapInfo;
   storage: StorageInfo;
   database: DatabaseInfo;
+  time: TimeInfo;
 }
 
 export interface WifiInfo {
@@ -53,4 +54,12 @@ export interface DatabaseInfo {
     today: number;
     total: number;
   };
+}
+
+export interface TimeInfo {
+  datetime: string;
+  is_valid: boolean;
+  time_source: string;
+  timezone: string;
+  timestamp: number;
 }
