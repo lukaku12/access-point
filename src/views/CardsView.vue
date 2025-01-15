@@ -233,7 +233,7 @@ onMounted(refreshCards);
 </script>
 
 <template>
-  <div class="space-y-6 h-screen max-h-screen overflow-hidden flex flex-col">
+  <div class="space-y-6 h-full min-h-[calc(100vh-152px)] flex flex-col">
     <!-- Flash message and buttons section -->
     <div class="flex-none">
       <FlashMessage
@@ -321,7 +321,7 @@ onMounted(refreshCards);
     <DashboardCard
       title=""
       :isLoading="loading"
-      class="flex-1 flex flex-col min-h-0"
+      class="flex flex-col min-h-0"
     >
       <div class="flex flex-col h-full">
         <div class="flex-none mb-4 flex items-center justify-end">
@@ -332,7 +332,7 @@ onMounted(refreshCards);
             @page-change="handlePageChange"
           />
         </div>
-        <div class="flex-1 overflow-auto min-h-0">
+        <div class="overflow-auto min-h-0">
           <CardsTable
             :cards="cards"
             :onEdit="editCard"

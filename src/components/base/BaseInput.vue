@@ -14,12 +14,16 @@ interface Props {
   minlength?: string | number;
   min?: string | number;
   max?: string | number;
+  autocomplete?: string;
+  name?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'text',
   required: false,
-  disabled: false
+  disabled: false,
+  autocomplete: undefined,
+  name: undefined
 });
 
 const emit = defineEmits<{
@@ -67,6 +71,8 @@ const updateValue = (event: Event) => {
         :minlength="minlength"
         :min="min"
         :max="max"
+        :autocomplete="autocomplete"
+        :name="name"
         :class="[
           'block w-full rounded-lg text-sm transition-all duration-200',
           'border-2 shadow-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100',

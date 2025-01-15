@@ -100,7 +100,7 @@ const confirmUpload = () => {
 </script>
 
 <template>
-  <div class="max-w-xl mx-auto p-4">
+  <div class="max-w-xl mx-auto p-4 min-h-[calc(100vh-152px)]">
     <!-- Warning Banner -->
     <div class="mb-6 bg-yellow-50 dark:bg-yellow-900/30 border-l-4 border-yellow-400 p-4">
       <div class="flex">

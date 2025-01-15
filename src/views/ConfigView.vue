@@ -58,7 +58,7 @@ const handleSubmit = async (data: { newAuthKey: string; config: Config }) => {
 </script>
 
 <template>
-    <div class="max-w-4xl mx-auto py-8 px-4">
+    <div class="max-w-4xl h-full min-h-[calc(100vh-152px)] mx-auto py-8 px-4">
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">System Configuration</h1>
             <p class="text-gray-600 dark:text-gray-400">Manage system settings and parameters</p>

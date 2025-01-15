@@ -9,19 +9,16 @@ const currentRoute = computed(() => (route.name as string) || '');
 </script>
 
 <template>
-  <div 
-    :class="{
-      'min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200': !hideNavbar,
-      'overflow-y-hidden': hideNavbar
-    }"
-    class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200"
-  >
-    <div class="font-sans antialiased p-8 max-w-7xl mx-auto">
+  <div :class="{
+    'bg-gray-50 dark:bg-gray-900 transition-colors duration-200': !hideNavbar,
+    'overflow-y-hidden': hideNavbar
+  }" class="h-full bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div class="font-sans antialiased p-8 max-w-7xl mx-auto h-full">
       <!-- Navbar stays at top -->
       <NavBar v-if="!hideNavbar" :active-route="currentRoute" />
 
       <!-- Content area - vertically centered on large screens -->
-      <div :class="{ 'lg:min-h-[calc(100vh-200px)] lg:flex lg:items-center': !hideNavbar }">
+      <div :class="{ 'lg:flex lg:items-center': !hideNavbar }">
         <router-view v-slot="{ Component }">
           <Transition name="fade" mode="out-in">
             <component :is="Component" class="w-full" />

@@ -37,7 +37,7 @@ const handleSubmit = () => {
 </script>
 
 <template>
-    <form @submit.prevent="handleSubmit" class="space-y-6">
+    <form @submit.prevent="handleSubmit" class="space-y-6 h-full">
         <div class="card bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
             <h2 class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-4 pb-2 border-b border-blue-100 dark:border-blue-900">
                 Security Settings

@@ -13,7 +13,7 @@ const goHome = () => {
 </script>
 
 <template>
-  <div class="min-h-[80vh] flex items-center justify-center px-4">
+  <div class="min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
     <div class="text-center">
       <!-- 404 Icon -->
       <div class="mb-8 text-gray-400 dark:text-gray-500">

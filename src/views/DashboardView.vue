@@ -87,9 +87,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto">
-    <div v-if="error" class="bg-red-50 dark:bg-red-900/50 border-l-4 border-red-500 p-4 mb-6">
-      <p class="text-red-700 dark:text-red-200">{{ error }}</p>
+  <div class="max-w-7xl mx-auto min-h-[calc(100vh-152px)] my-auto">
+    <div :class="{' opacity-1 ': error, ' opacity-0 ': !error}" class="bg-red-50 dark:bg-red-900/50 border-l-4 border-red-500 p-4 mb-6">
+      <p class="text-red-700 dark:text-red-200">{{ error + ' | Retrying...' || 'haha'}}</p>
     </div>
 
     <transition name="fade">

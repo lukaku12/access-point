@@ -1,5 +1,7 @@
 <script setup lang="ts">
-defineProps<{
+import { watch, onBeforeUnmount } from 'vue';
+
+const props = defineProps<{
   show: boolean;
   title: string;
   disabled?: boolean;
@@ -12,6 +14,26 @@ defineEmits<{
   (e: 'close'): void;
   (e: 'confirm'): void;
 }>();
+
+// Handle scroll locking
+const setScrollLock = (lock: boolean) => {
+  if (lock) {
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.documentElement.style.setProperty('--scrollbar-width', `${scrollbarWidth}px`);
+    document.body.classList.add('modal-open');
+  } else {
+    document.body.classList.remove('modal-open');
+    document.documentElement.style.removeProperty('--scrollbar-width');
+  }
+};
+
+watch(() => props.show, (newValue) => {
+  setScrollLock(newValue);
+});
+
+onBeforeUnmount(() => {
+  setScrollLock(false);
+});
 </script>
 
 <template>
@@ -24,7 +46,7 @@ defineEmits<{
       leave-from-class="opacity-100"
       leave-to-class="opacity-0"
     >
-      <div v-if="show" class="fixed inset-0 z-50">
+      <div v-if="show" class="fixed inset-0 z-50 no-scrollbar">
         <!-- Backdrop -->
         <div 
           class="absolute inset-0 bg-black/50 dark:bg-black/70" 
@@ -42,7 +64,7 @@ defineEmits<{
         >
           <div
             v-show="show"
-            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-xl"
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-xl no-scrollbar"
           >
             <div class="border-gray-200 dark:border-gray-700 p-6">
               <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">{{ title }}</h3>

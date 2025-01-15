@@ -92,7 +92,7 @@ onMounted(refreshCardReads);
 </script>
 
 <template>
-  <div class="space-y-6 h-screen max-h-screen overflow-hidden flex flex-col bg-white dark:bg-gray-900">
+  <div class="space-y-6 h-full flex flex-col min-h-[calc(100vh-152px)] bg-white dark:bg-gray-900">
     <!-- Flash message and buttons section -->
     <div class="flex-none">
       <FlashMessage
@@ -192,7 +192,7 @@ onMounted(refreshCardReads);
     <DashboardCard
       title=""
       :isLoading="loading"
-      class="flex-1 flex flex-col min-h-0"
+      class="flex flex-col min-h-0"
     >
       <div class="flex flex-col h-full">
         <div class="flex-none mb-4 flex items-center justify-end">
