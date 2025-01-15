@@ -92,7 +92,7 @@ onMounted(refreshCardReads);
 </script>
 
 <template>
-  <div class="space-y-6 h-full flex flex-col min-h-[calc(100vh-152px)] bg-white dark:bg-gray-900">
+  <div class="space-y-6 h-full flex flex-col min-h-[calc(100vh-152px)]">
     <!-- Flash message and buttons section -->
     <div class="flex-none">
       <FlashMessage

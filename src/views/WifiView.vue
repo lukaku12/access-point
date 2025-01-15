@@ -201,7 +201,7 @@ onMounted(refreshNetworks);
 </script>
 
 <template>
-  <div class="space-y-6 h-full flex min-h-[calc(100vh-152px)] flex-col bg-white dark:bg-gray-900">
+  <div class="space-y-6 h-full flex min-h-[calc(100vh-152px)] flex-col">
     <!-- Flash message and buttons section -->
     <div class="flex-none">
       <FlashMessage
