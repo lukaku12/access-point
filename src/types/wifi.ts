@@ -60,7 +60,9 @@ export interface DeleteAllWiFiResponse extends ApiSuccessResponse {
 }
 
 // Type guards with proper typing
-export const isCreateWiFiSuccess = (data: unknown): data is CreateWiFiResponse => {
+export const isCreateWiFiSuccess = (
+  data: unknown
+): data is CreateWiFiResponse => {
   const response = data as Partial<CreateWiFiResponse>;
   return response?.status === 'success';
 };
@@ -70,7 +72,9 @@ export const isCreateWiFiError = (data: unknown): data is ApiErrorResponse => {
   return response?.status === 'error' && !!response?.message;
 };
 
-export const isUpdateWiFiSuccess = (data: unknown): data is UpdateWiFiResponse => {
+export const isUpdateWiFiSuccess = (
+  data: unknown
+): data is UpdateWiFiResponse => {
   const response = data as Partial<UpdateWiFiResponse>;
   return response?.status === 'success';
 };
@@ -80,7 +84,9 @@ export const isUpdateWiFiError = (data: unknown): data is ApiErrorResponse => {
   return response?.status === 'error' && !!response?.message;
 };
 
-export const isDeleteWiFiSuccess = (data: unknown): data is DeleteWiFiResponse => {
+export const isDeleteWiFiSuccess = (
+  data: unknown
+): data is DeleteWiFiResponse => {
   const response = data as Partial<DeleteWiFiResponse>;
   return response?.status === 'success';
 };
@@ -90,12 +96,16 @@ export const isDeleteWiFiError = (data: unknown): data is ApiErrorResponse => {
   return response?.status === 'error' && !!response?.message;
 };
 
-export const isDeleteAllWiFiSuccess = (data: unknown): data is DeleteAllWiFiResponse => {
+export const isDeleteAllWiFiSuccess = (
+  data: unknown
+): data is DeleteAllWiFiResponse => {
   const response = data as Partial<DeleteAllWiFiResponse>;
   return response?.status === 'success';
 };
 
-export const isDeleteAllWiFiError = (data: unknown): data is ApiErrorResponse => {
+export const isDeleteAllWiFiError = (
+  data: unknown
+): data is ApiErrorResponse => {
   const response = data as Partial<ApiErrorResponse>;
   return response?.status === 'error' && !!response?.message;
 };

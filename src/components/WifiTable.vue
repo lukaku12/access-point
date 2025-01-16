@@ -12,23 +12,29 @@ const props = defineProps<{
 const isDefaultNetwork = (network: WiFiNetwork) => network.id === 1;
 
 const columns = [
-  { 
-    key: 'id', 
+  {
+    key: 'id',
     label: 'ID',
-    cellClass: (item: WiFiNetwork) => 
-      isDefaultNetwork(item) ? 'font-extrabold text-2xl text-yellow-500 dark:text-yellow-400' : ''
+    cellClass: (item: WiFiNetwork) =>
+      isDefaultNetwork(item)
+        ? 'font-extrabold text-2xl text-yellow-500 dark:text-yellow-400'
+        : ''
   },
-  { 
-    key: 'ssid', 
+  {
+    key: 'ssid',
     label: 'SSID',
-    cellClass: (item: WiFiNetwork) => 
-      isDefaultNetwork(item) ? 'font-extrabold text-2xl text-yellow-500 dark:text-yellow-400' : ''
+    cellClass: (item: WiFiNetwork) =>
+      isDefaultNetwork(item)
+        ? 'font-extrabold text-2xl text-yellow-500 dark:text-yellow-400'
+        : ''
   },
-  { 
-    key: 'password', 
+  {
+    key: 'password',
     label: 'Password',
-    cellClass: (item: WiFiNetwork) => 
-      isDefaultNetwork(item) ? 'font-extrabold text-2xl text-yellow-500 dark:text-yellow-400' : ''
+    cellClass: (item: WiFiNetwork) =>
+      isDefaultNetwork(item)
+        ? 'font-extrabold text-2xl text-yellow-500 dark:text-yellow-400'
+        : ''
   }
 ];
 
@@ -56,8 +62,8 @@ const actions = [
 ];
 
 const getRowClass = (item: WiFiNetwork) => {
-  return isDefaultNetwork(item) 
-    ? 'bg-yellow-50 dark:bg-yellow-900/20 cursor-not-allowed border-l-4 border-yellow-500' 
+  return isDefaultNetwork(item)
+    ? 'bg-yellow-50 dark:bg-yellow-900/20 cursor-not-allowed border-l-4 border-yellow-500'
     : '';
 };
 </script>

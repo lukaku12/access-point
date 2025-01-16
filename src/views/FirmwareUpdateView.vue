@@ -3,5 +3,5 @@ import FirmwareUpdateForm from '@/components/forms/FirmwareUpdateForm.vue';
 </script>
 
 <template>
-    <FirmwareUpdateForm />
+  <FirmwareUpdateForm />
 </template>

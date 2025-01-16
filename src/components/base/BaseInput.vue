@@ -114,7 +114,10 @@ const updateValue = (event: Event) => {
     </p>
 
     <!-- Help text -->
-    <p v-else-if="helpText" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+    <p
+      v-else-if="helpText"
+      class="mt-2 text-sm text-gray-500 dark:text-gray-400"
+    >
       {{ helpText }}
     </p>
   </div>

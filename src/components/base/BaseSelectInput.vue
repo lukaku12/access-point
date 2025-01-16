@@ -42,13 +42,19 @@ const handleSelect = (value: string) => {
 };
 
 const getSelectedLabel = () => {
-  return props.options.find(option => option.value === props.modelValue)?.label || 'Select option';
+  return (
+    props.options.find((option) => option.value === props.modelValue)?.label ||
+    'Select option'
+  );
 };
 </script>
 
 <template>
   <div class="form-group" ref="selectRef">
-    <label v-if="label" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+    <label
+      v-if="label"
+      class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+    >
       {{ label }} <span v-if="required" class="text-red-500">*</span>
     </label>
     <div class="relative">
@@ -60,11 +66,17 @@ const getSelectedLabel = () => {
         :class="{
           'border-blue-500 dark:border-blue-400': isOpen && !disabled,
           'border-gray-300 dark:border-gray-600': !isOpen && !disabled,
-          'border-gray-200 dark:border-gray-700 opacity-75 cursor-not-allowed': disabled
+          'border-gray-200 dark:border-gray-700 opacity-75 cursor-not-allowed':
+            disabled
         }"
       >
         <div class="flex items-center justify-between">
-          <span :class="{ 'text-gray-900 dark:text-gray-100': modelValue, 'text-gray-500': !modelValue }">
+          <span
+            :class="{
+              'text-gray-900 dark:text-gray-100': modelValue,
+              'text-gray-500': !modelValue
+            }"
+          >
             {{ getSelectedLabel() }}
           </span>
           <svg
@@ -74,7 +86,11 @@ const getSelectedLabel = () => {
             viewBox="0 0 20 20"
             fill="currentColor"
           >
-            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            <path
+              fill-rule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            />
           </svg>
         </div>
       </button>
@@ -91,7 +107,8 @@ const getSelectedLabel = () => {
             @click="handleSelect(option.value)"
             class="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-150"
             :class="{
-              'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300': modelValue === option.value,
+              'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300':
+                modelValue === option.value,
               'text-gray-900 dark:text-gray-100': modelValue !== option.value
             }"
           >

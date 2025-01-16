@@ -30,7 +30,9 @@ export const updateWiFiNetwork = (
 };
 
 export const removeWiFiNetwork = (id: number) => {
-  return api.delete<DeleteWiFiResponse>(`/wifi-credentials?credential_id=${id}`);
+  return api.delete<DeleteWiFiResponse>(
+    `/wifi-credentials?credential_id=${id}`
+  );
 };
 
 export const removeAllWiFiNetworks = () => {

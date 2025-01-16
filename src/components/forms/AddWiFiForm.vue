@@ -37,14 +37,15 @@ const handleBlur = (field: string) => {
   } else if (field === 'password') {
     validateField('password', password.value, {
       required: (v) => !!v || 'Password is required',
-      minLength: (v) => v.length >= 5 || 'Password must be at least 5 characters'
+      minLength: (v) =>
+        v.length >= 5 || 'Password must be at least 5 characters'
     });
   }
 };
 
 const handleSubmit = () => {
   if (isSubmitting.value) return;
-  
+
   if (validateForm()) {
     isSubmitting.value = true;
     emit('submit', {
@@ -68,7 +69,7 @@ defineExpose({ handleSubmit, isSubmitting });
       :error="touched?.ssid ? errors?.ssid : ''"
       @blur="() => handleBlur('ssid')"
     />
-    
+
     <BaseInput
       v-model="password"
       label="Password"
@@ -80,7 +81,10 @@ defineExpose({ handleSubmit, isSubmitting });
       @blur="() => handleBlur('password')"
     />
 
-    <div v-if="!isValid && Object.keys(touched).length > 0" class="mt-4 p-3 bg-red-50 text-red-600 rounded-md">
+    <div
+      v-if="!isValid && Object.keys(touched).length > 0"
+      class="mt-4 p-3 bg-red-50 text-red-600 rounded-md"
+    >
       Please fix the validation errors before submitting.
     </div>
   </form>

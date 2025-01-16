@@ -95,8 +95,13 @@ onUnmounted(() => {
 
 <template>
   <div class="max-w-7xl mx-auto min-h-[calc(100vh-152px)] my-auto">
-    <div :class="{' opacity-1 ': error, ' opacity-0 ': !error}" class="bg-red-50 dark:bg-red-900/50 border-l-4 border-red-500 p-4 mb-6">
-      <p class="text-red-700 dark:text-red-200">{{ error + ' | Retrying...' || 'haha'}}</p>
+    <div
+      :class="{ ' opacity-1 ': error, ' opacity-0 ': !error }"
+      class="bg-red-50 dark:bg-red-900/50 border-l-4 border-red-500 p-4 mb-6"
+    >
+      <p class="text-red-700 dark:text-red-200">
+        {{ error + ' | Retrying...' || 'haha' }}
+      </p>
     </div>
 
     <transition name="fade">
@@ -110,19 +115,29 @@ onUnmounted(() => {
           <div class="space-y-2">
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">SSID:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.wifi.ssid }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.wifi.ssid
+              }}</span>
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">IP Address:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.wifi.ip }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.wifi.ip
+              }}</span>
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">MAC Address:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.wifi.mac }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.wifi.mac
+              }}</span>
             </div>
             <div class="stat-row">
-              <span class="stat-label dark:text-gray-300">Signal Strength:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.wifi.rssi }}dBm</span>
+              <span class="stat-label dark:text-gray-300"
+                >Signal Strength:</span
+              >
+              <span class="stat-value dark:text-gray-100"
+                >{{ stats.wifi.rssi }}dBm</span
+              >
             </div>
           </div>
         </DashboardCard>
@@ -133,19 +148,27 @@ onUnmounted(() => {
           <div class="space-y-2">
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">CPU Frequency:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.system.cpu_freq }} MHz</span>
+              <span class="stat-value dark:text-gray-100"
+                >{{ stats.system.cpu_freq }} MHz</span
+              >
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Uptime:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.system.uptime }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.system.uptime
+              }}</span>
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Flash Size:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.storage.flash.size }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.storage.flash.size
+              }}</span>
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Flash Speed:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.storage.flash.speed }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.storage.flash.speed
+              }}</span>
             </div>
           </div>
         </DashboardCard>
@@ -161,7 +184,9 @@ onUnmounted(() => {
                   >{{ stats.heap.usage_percent.toFixed(2) }}%</span
                 >
               </div>
-              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-1">
+              <div
+                class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-1"
+              >
                 <div
                   class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full"
                   :style="{ width: `${stats.heap.usage_percent}%` }"
@@ -169,22 +194,30 @@ onUnmounted(() => {
               </div>
               <div class="storage-info dark:text-gray-400">
                 <span class="storage-label dark:text-gray-300">Free:</span>
-                <span class="storage-value dark:text-gray-200">{{ stats.heap.free }}</span>
+                <span class="storage-value dark:text-gray-200">{{
+                  stats.heap.free
+                }}</span>
                 <span class="storage-separator dark:text-gray-500">/</span>
                 <span class="storage-label dark:text-gray-300">Total:</span>
-                <span class="storage-value dark:text-gray-200">{{ stats.heap.total }}</span>
+                <span class="storage-value dark:text-gray-200">{{
+                  stats.heap.total
+                }}</span>
               </div>
             </div>
             <div>
               <div class="stat-row mb-2">
-                <span class="stat-label dark:text-gray-300">Storage Usage:</span>
+                <span class="stat-label dark:text-gray-300"
+                  >Storage Usage:</span
+                >
                 <span class="stat-value dark:text-gray-100"
                   >{{
                     stats.storage.filesystem.usage_percent.toFixed(2)
                   }}%</span
                 >
               </div>
-              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-1">
+              <div
+                class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-1"
+              >
                 <div
                   class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full"
                   :style="{
@@ -213,11 +246,15 @@ onUnmounted(() => {
           <div class="space-y-2">
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Total Cards:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.database.cards.total }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.database.cards.total
+              }}</span>
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Active Cards:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.database.cards.active }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.database.cards.active
+              }}</span>
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Inactive Cards:</span>
@@ -228,11 +265,15 @@ onUnmounted(() => {
             <hr class="border-gray-200 dark:border-gray-700" />
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Reads Today:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.database.reads.today }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.database.reads.today
+              }}</span>
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Total Reads:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.database.reads.total }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.database.reads.total
+              }}</span>
             </div>
           </div>
         </DashboardCard>
@@ -243,23 +284,33 @@ onUnmounted(() => {
           <div class="space-y-2">
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Date & Time:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.time.datetime }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.time.datetime
+              }}</span>
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Time Stamp:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.time.timestamp }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.time.timestamp
+              }}</span>
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Time Source:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.time.time_source }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.time.time_source
+              }}</span>
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Timezone:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.time.timezone }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.time.timezone
+              }}</span>
             </div>
             <div class="stat-row">
               <span class="stat-label dark:text-gray-300">Status:</span>
-              <span class="stat-value dark:text-gray-100">{{ stats.time.is_valid ? 'Valid' : 'Invalid' }}</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.time.is_valid ? 'Valid' : 'Invalid'
+              }}</span>
             </div>
           </div>
         </DashboardCard>

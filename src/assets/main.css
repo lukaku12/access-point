@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 /* Add your custom styles here */
-html, body, #app {
+html,
+body,
+#app {
   min-height: 100vh;
   width: 100%;
   margin: 0;
@@ -21,8 +23,8 @@ html, body, #app {
 
 /* Hide scrollbar */
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .no-scrollbar::-webkit-scrollbar {

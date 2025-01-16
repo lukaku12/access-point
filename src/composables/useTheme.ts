@@ -1,8 +1,10 @@
 import { ref, watch, onMounted } from 'vue';
 
 export function useTheme() {
-  const isDark = ref(localStorage.getItem('theme') === 'dark' || 
-    window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const isDark = ref(
+    localStorage.getItem('theme') === 'dark' ||
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
 
   const toggleTheme = () => {
     isDark.value = !isDark.value;

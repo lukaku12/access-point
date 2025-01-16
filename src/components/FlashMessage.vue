@@ -25,9 +25,12 @@ onMounted(() => {
   <div
     class="fixed top-4 right-4 z-[1000] p-4 rounded-lg shadow-lg max-w-md animate-slide-in"
     :class="{
-      'bg-green-50 dark:bg-green-900/50 text-green-800 dark:text-green-100': type === 'success',
-      'bg-red-50 dark:bg-red-900/50 text-red-800 dark:text-red-100': type === 'error',
-      'bg-blue-50 dark:bg-blue-900/50 text-blue-800 dark:text-blue-100': type === 'info'
+      'bg-green-50 dark:bg-green-900/50 text-green-800 dark:text-green-100':
+        type === 'success',
+      'bg-red-50 dark:bg-red-900/50 text-red-800 dark:text-red-100':
+        type === 'error',
+      'bg-blue-50 dark:bg-blue-900/50 text-blue-800 dark:text-blue-100':
+        type === 'info'
     }"
   >
     <div class="flex items-center justify-between">
@@ -81,7 +84,10 @@ onMounted(() => {
       </div>
 
       <!-- Close Icon -->
-      <button @click="onClose" class="ml-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300">
+      <button
+        @click="onClose"
+        class="ml-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-5 w-5"

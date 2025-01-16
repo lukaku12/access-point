@@ -14,17 +14,17 @@ export const login = async (
       auth_key: authKey
     };
     localStorage.setItem('connection', JSON.stringify(connectionDetails));
-    
+
     // Force axios to use new base URL
     api.defaults.baseURL = `http://${ip}:${port}`;
-    
+
     // Try to authenticate
     const response = await api.post<AuthResponse>('/auth-key');
     if (response.data.success) {
       localStorage.setItem('isAuthorized', 'true');
       return true;
     }
-    
+
     // If we get here, authentication failed
     logout();
     return false;

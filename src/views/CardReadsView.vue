@@ -9,7 +9,11 @@ import { useFlashMessage } from '@/composables/useFlashMessage';
 import { usePagination } from '@/composables/usePagination';
 import TablePagination from '@/components/TablePagination.vue';
 import GenericTable from '@/components/GenericTable.vue';
-import { isDeleteAllCardReadsSuccess, isAuthError, isOperationError } from '@/types/cardReads';
+import {
+  isDeleteAllCardReadsSuccess,
+  isAuthError,
+  isOperationError
+} from '@/types/cardReads';
 
 const cardReads = ref<CardRead[]>([]);
 const loading = ref(true);
@@ -72,7 +76,10 @@ const handleDeleteAllConfirm = async () => {
 
     if (isDeleteAllCardReadsSuccess(data)) {
       await refreshCardReads();
-      showMessage(`Successfully removed ${data.data.reads_removed} card reads`, 'success');
+      showMessage(
+        `Successfully removed ${data.data.reads_removed} card reads`,
+        'success'
+      );
     } else if (isAuthError(data)) {
       showMessage('Authentication error. Please log in again.', 'error');
       // Optionally redirect to login page or handle auth error
@@ -81,7 +88,10 @@ const handleDeleteAllConfirm = async () => {
     }
   } catch (error) {
     console.error('Error deleting all card reads:', error);
-    showMessage('An unexpected error occurred while deleting card reads', 'error');
+    showMessage(
+      'An unexpected error occurred while deleting card reads',
+      'error'
+    );
   } finally {
     isDeleteAllLoading.value = false;
     showDeleteAllModal.value = false;
@@ -101,71 +111,78 @@ onMounted(refreshCardReads);
         :type="currentMessage.type"
         :onClose="clearMessage"
       />
-      <div class="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+      <div
+        class="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0"
+      >
         <div></div>
-        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-          <button @click="refreshCardReads" class="btn-primary w-full sm:w-auto">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 mr-2 inline"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+        <div
+          class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-          />
-        </svg>
-        Refresh
+          <button
+            @click="refreshCardReads"
+            class="btn-primary w-full sm:w-auto"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 inline"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+            Refresh
           </button>
           <button
-        @click="deleteAllCardReads"
-        class="btn-danger w-full sm:w-auto"
-        :disabled="isDeleteAllLoading"
+            @click="deleteAllCardReads"
+            class="btn-danger w-full sm:w-auto"
+            :disabled="isDeleteAllLoading"
           >
-        <template v-if="!isDeleteAllLoading">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2 inline"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
-          </svg>
-          Delete All
-        </template>
-        <template v-else>
-          <svg
-            class="animate-spin h-5 w-5 mr-2 inline"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-            ></circle>
-            <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-          Deleting...
-        </template>
+            <template v-if="!isDeleteAllLoading">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2 inline"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+              Delete All
+            </template>
+            <template v-else>
+              <svg
+                class="animate-spin h-5 w-5 mr-2 inline"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Deleting...
+            </template>
           </button>
         </div>
       </div>
@@ -174,7 +191,9 @@ onMounted(refreshCardReads);
     <!-- Stats cards section -->
     <div class="flex-none grid grid-cols-1 md:grid-cols-3 gap-4">
       <DashboardCard title="Total Card Reads" :isLoading="loading">
-        <div class="text-2xl font-bold dark:text-white">{{ pagination.totalItems }}</div>
+        <div class="text-2xl font-bold dark:text-white">
+          {{ pagination.totalItems }}
+        </div>
       </DashboardCard>
       <DashboardCard title="Current Page" :isLoading="loading">
         <div class="text-2xl font-bold dark:text-white">
@@ -184,16 +203,14 @@ onMounted(refreshCardReads);
         </div>
       </DashboardCard>
       <DashboardCard title="Per Page" :isLoading="loading">
-        <div class="text-2xl font-bold dark:text-white">{{ pagination.perPage }}</div>
+        <div class="text-2xl font-bold dark:text-white">
+          {{ pagination.perPage }}
+        </div>
       </DashboardCard>
     </div>
 
     <!-- Table section with pagination -->
-    <DashboardCard
-      title=""
-      :isLoading="loading"
-      class="flex flex-col min-h-0"
-    >
+    <DashboardCard title="" :isLoading="loading" class="flex flex-col min-h-0">
       <div class="flex flex-col h-full">
         <div class="flex-none mb-4 flex items-center justify-end">
           <TablePagination

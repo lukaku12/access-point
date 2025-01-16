@@ -237,75 +237,81 @@ onMounted(refreshCards);
     <!-- Flash message and buttons section -->
     <div class="flex-none">
       <FlashMessage
-      v-if="currentMessage"
-      :message="currentMessage.message"
-      :type="currentMessage.type"
-      :onClose="clearMessage"
+        v-if="currentMessage"
+        :message="currentMessage.message"
+        :type="currentMessage.type"
+        :onClose="clearMessage"
       />
       <!-- Changed flex to flex-col on mobile, row on larger screens -->
-      <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:justify-between sm:items-center">
-      <div></div>
-      <!-- Changed space-x to space-y on mobile, space-x on larger screens -->
-      <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
-        <button @click="addNewCard" class="btn-success w-full sm:w-auto">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 mr-2 inline"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      <div
+        class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:justify-between sm:items-center"
+      >
+        <div></div>
+        <!-- Changed space-x to space-y on mobile, space-x on larger screens -->
+        <div
+          class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4"
         >
-          <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 4v16m8-8H4"
-          />
-        </svg>
-        Add Card
-        </button>
-        <button @click="refreshCards" class="btn-primary w-full sm:w-auto">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 mr-2 inline"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-          />
-        </svg>
-        Refresh
-        </button>
-        <button @click="deleteAllCards" class="btn-danger w-full sm:w-auto">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 mr-2 inline"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-          />
-        </svg>
-        Delete All
-        </button>
-      </div>
+          <button @click="addNewCard" class="btn-success w-full sm:w-auto">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 inline"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add Card
+          </button>
+          <button @click="refreshCards" class="btn-primary w-full sm:w-auto">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 inline"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+            Refresh
+          </button>
+          <button @click="deleteAllCards" class="btn-danger w-full sm:w-auto">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 inline"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+            Delete All
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Stats cards section -->
     <div class="flex-none grid grid-cols-1 md:grid-cols-3 gap-4">
       <DashboardCard title="Total Cards" :isLoading="loading">
-        <div class="text-2xl font-bold dark:text-white">{{ pagination.totalItems }}</div>
+        <div class="text-2xl font-bold dark:text-white">
+          {{ pagination.totalItems }}
+        </div>
       </DashboardCard>
       <DashboardCard title="Current Page" :isLoading="loading">
         <div class="text-2xl font-bold dark:text-white">
@@ -315,16 +321,14 @@ onMounted(refreshCards);
         </div>
       </DashboardCard>
       <DashboardCard title="Per Page" :isLoading="loading">
-        <div class="text-2xl font-bold dark:text-white">{{ pagination.perPage }}</div>
+        <div class="text-2xl font-bold dark:text-white">
+          {{ pagination.perPage }}
+        </div>
       </DashboardCard>
     </div>
 
     <!-- Table section with pagination -->
-    <DashboardCard
-      title=""
-      :isLoading="loading"
-      class="flex flex-col min-h-0"
-    >
+    <DashboardCard title="" :isLoading="loading" class="flex flex-col min-h-0">
       <div class="flex flex-col h-full">
         <div class="flex-none mb-4 flex items-center justify-end">
           <TablePagination
@@ -393,11 +397,18 @@ onMounted(refreshCards);
       :disabled="isDeleteLoading"
       :loading="isDeleteLoading"
     >
-      <p class="dark:text-gray-300">Are you sure you want to delete this card?</p>
-      <p v-if="selectedCard" class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+      <p class="dark:text-gray-300">
+        Are you sure you want to delete this card?
+      </p>
+      <p
+        v-if="selectedCard"
+        class="text-sm text-gray-500 dark:text-gray-400 mt-2"
+      >
         Card Number: {{ selectedCard.number }}
       </p>
-      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">This action cannot be undone.</p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+        This action cannot be undone.
+      </p>
     </BaseModal>
 
     <!-- Delete All Cards Modal -->
@@ -409,8 +420,12 @@ onMounted(refreshCards);
       :disabled="isDeleteAllLoading"
       :loading="isDeleteAllLoading"
     >
-      <p class="dark:text-gray-300">Are you sure you want to delete all cards?</p>
-      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">This action cannot be undone.</p>
+      <p class="dark:text-gray-300">
+        Are you sure you want to delete all cards?
+      </p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+        This action cannot be undone.
+      </p>
     </BaseModal>
   </div>
 </template>

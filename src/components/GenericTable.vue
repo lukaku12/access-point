@@ -24,9 +24,13 @@ defineProps<{
 </script>
 
 <template>
-  <div class="overflow-x-auto rounded-lg border border-gray-200/60 dark:border-gray-700/60 shadow-sm">
+  <div
+    class="overflow-x-auto rounded-lg border border-gray-200/60 dark:border-gray-700/60 shadow-sm"
+  >
     <!-- Desktop view -->
-    <table class="min-w-full divide-y divide-gray-200/60 dark:divide-gray-700/60 hidden md:table">
+    <table
+      class="min-w-full divide-y divide-gray-200/60 dark:divide-gray-700/60 hidden md:table"
+    >
       <thead>
         <tr>
           <th
@@ -44,15 +48,31 @@ defineProps<{
           </th>
         </tr>
       </thead>
-      <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200/60 dark:divide-gray-700/60">
+      <tbody
+        class="bg-white dark:bg-gray-900 divide-y divide-gray-200/60 dark:divide-gray-700/60"
+      >
         <template v-if="loading">
           <tr>
-            <td :colspan="actions?.length ? columns.length + 1 : columns.length" class="px-6 py-12">
+            <td
+              :colspan="actions?.length ? columns.length + 1 : columns.length"
+              class="px-6 py-12"
+            >
               <div class="flex flex-col items-center justify-center h-[200px]">
                 <div class="text-gray-400 dark:text-gray-500 animate-spin">
                   <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                 </div>
                 <p class="mt-4 text-gray-500 dark:text-gray-400">Loading...</p>
@@ -96,14 +116,31 @@ defineProps<{
               </tr>
             </div>
             <tr v-else>
-              <td :colspan="actions?.length ? columns.length + 1 : columns.length" class="px-6 py-12">
-                <div class="flex flex-col items-center justify-center h-[200px]">
+              <td
+                :colspan="actions?.length ? columns.length + 1 : columns.length"
+                class="px-6 py-12"
+              >
+                <div
+                  class="flex flex-col items-center justify-center h-[200px]"
+                >
                   <div class="text-gray-400 dark:text-gray-500">
-                    <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h7" />
+                    <svg
+                      class="w-16 h-16"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.5"
+                        d="M4 6h16M4 12h16M4 18h7"
+                      />
                     </svg>
                   </div>
-                  <p class="mt-4 text-gray-500 dark:text-gray-400">{{ emptyMessage || 'No data available' }}</p>
+                  <p class="mt-4 text-gray-500 dark:text-gray-400">
+                    {{ emptyMessage || 'No data available' }}
+                  </p>
                 </div>
               </td>
             </tr>
@@ -120,18 +157,32 @@ defineProps<{
             class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
           >
             {{
-              columns.find((col) => col.key === mobileDisplayKeys?.[0])?.label
+              columns.find((col: any) => col.key === mobileDisplayKeys?.[0])
+                ?.label
             }}
           </div>
         </template>
       </div>
       <div class="divide-y divide-gray-200/60 dark:divide-gray-700/60">
         <template v-if="loading">
-          <div class="flex flex-col items-center justify-center h-[200px] bg-white dark:bg-gray-900">
+          <div
+            class="flex flex-col items-center justify-center h-[200px] bg-white dark:bg-gray-900"
+          >
             <div class="text-gray-400 dark:text-gray-500 animate-spin">
               <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
             </div>
             <p class="mt-4 text-gray-500 dark:text-gray-400">Loading...</p>
@@ -139,7 +190,11 @@ defineProps<{
         </template>
         <template v-else>
           <Transition name="fade-slide" mode="out-in">
-            <div v-if="data.length" :key="'data'" class="divide-y divide-gray-200/60 dark:divide-gray-700/60">
+            <div
+              v-if="data.length"
+              :key="'data'"
+              class="divide-y divide-gray-200/60 dark:divide-gray-700/60"
+            >
               <div
                 v-for="item in data"
                 :key="item.id"
@@ -155,14 +210,17 @@ defineProps<{
                         class="space-y-1"
                       >
                         <div class="text-sm text-gray-500 dark:text-gray-400">
-                          {{ columns.find((col) => col.key === key)?.label }}
-                        </div>
-                        <div class="font-medium text-gray-900 dark:text-gray-100">
                           {{
-                            columns.find((col) => col.key === key)?.format
-                              ? columns.find((col) => col.key === key)?.format!(
-                                  item[key]
-                                )
+                            columns.find((col: any) => col.key === key)?.label
+                          }}
+                        </div>
+                        <div
+                          class="font-medium text-gray-900 dark:text-gray-100"
+                        >
+                          {{
+                            columns.find((col: any) => col.key === key)?.format
+                              ? columns.find((col: any) => col.key === key)
+                                  ?.format!(item[key])
                               : item[key]
                           }}
                         </div>
@@ -192,7 +250,9 @@ defineProps<{
                       v-if="!mobileDisplayKeys?.includes(column.key)"
                       class="space-y-1"
                     >
-                      <div class="text-gray-500 dark:text-gray-400">{{ column.label }}</div>
+                      <div class="text-gray-500 dark:text-gray-400">
+                        {{ column.label }}
+                      </div>
                       <div class="text-gray-900 dark:text-gray-100">
                         {{
                           column.format
@@ -211,13 +271,32 @@ defineProps<{
               class="flex flex-col items-center justify-center h-[200px] bg-white dark:bg-gray-900 transition-all duration-500"
             >
               <Transition name="fade" mode="out-in">
-                <div v-if="loading" :key="'loading'" class="text-gray-400 dark:text-gray-500 animate-spin">
+                <div
+                  v-if="loading"
+                  :key="'loading'"
+                  class="text-gray-400 dark:text-gray-500 animate-spin"
+                >
                   <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                 </div>
-                <div v-else :key="'empty'" class="text-gray-400 dark:text-gray-500">
+                <div
+                  v-else
+                  :key="'empty'"
+                  class="text-gray-400 dark:text-gray-500"
+                >
                   <svg
                     class="w-16 h-16"
                     fill="none"
@@ -234,7 +313,9 @@ defineProps<{
                 </div>
               </Transition>
               <p class="mt-4 text-gray-500 dark:text-gray-400">
-                {{ loading ? 'Loading...' : (emptyMessage || 'No data available') }}
+                {{
+                  loading ? 'Loading...' : emptyMessage || 'No data available'
+                }}
               </p>
             </div>
           </Transition>
@@ -287,7 +368,9 @@ td > div {
 
 /* Mobile view animations */
 .md\:hidden > div > div {
-  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 </style>

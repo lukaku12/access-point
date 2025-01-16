@@ -32,9 +32,14 @@ export const uploadFirmware = async (
         },
         timeout: 1800000, // 30 minutes timeout
         onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total!);
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total!
+          );
           onProgress?.(percentCompleted);
-          console.debug('[Firmware Update] Upload progress:', `${percentCompleted}%`);
+          console.debug(
+            '[Firmware Update] Upload progress:',
+            `${percentCompleted}%`
+          );
         }
       }
     );
