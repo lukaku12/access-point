@@ -95,7 +95,7 @@ const clearFlash = () => {
 </script>
 
 <template>
-  <div class="max-w-4xl h-full min-h-[calc(100vh-152px)] mx-auto py-8 px-4">
+  <div class=" h-full min-h-[calc(100vh-152px)] mx-auto py-8">
     <FlashMessage
       v-if="flash"
       :message="flash.message"

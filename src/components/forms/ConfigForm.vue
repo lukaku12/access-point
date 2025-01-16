@@ -117,118 +117,78 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-6 h-full">
-    <div class="card bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-      <h2
-        class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-4 pb-2 border-b border-blue-100 dark:border-blue-900"
-      >
-        Security Settings
-      </h2>
-
-      <div class="space-y-4">
-        <BaseInput
-          :model-value="currentAuthKey"
-          label="Current Authentication Key"
-          :disabled="true"
-          required
-        />
-
-        <BaseInput
-          v-model="newAuthKey"
-          label="New Authentication Key"
-          placeholder="Enter new auth key"
-          help-text="Only alphanumeric characters allowed, minimum 4 characters"
-          pattern="[A-Za-z0-9]+"
-          minlength="4"
-          :disabled="isDisabled"
-        />
+  <form @submit.prevent="handleSubmit" class="space-y-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <!-- Security Settings Card -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-5">
+        <div class="flex items-center mb-4">
+          <i class="fas fa-shield-alt text-blue-500 mr-2"></i>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Security Settings
+          </h2>
+        </div>
+        <div class="space-y-3">
+          <BaseInput :model-value="currentAuthKey" label="Current Authentication Key" :disabled="true" required
+            class="mb-2" />
+          <BaseInput v-model="newAuthKey" label="New Authentication Key" placeholder="Enter new auth key"
+            help-text="Minimum 4 alphanumeric characters" pattern="[A-Za-z0-9]+" minlength="4" :disabled="isDisabled" />
+        </div>
       </div>
+
+      <!-- Door Lock Settings Card -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-5">
+        <div class="flex items-center mb-4">
+          <i class="fas fa-door-closed text-blue-500 mr-2"></i>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Door Lock Settings
+          </h2>
+        </div>
+        <div class="space-y-3">
+          <BaseSelectInput v-model="formData.door_lock_variant" :options="doorLockVariants" label="Door Lock Variant"
+            required :error="errors.door_lock_variant" :disabled="isDisabled" />
+          <BaseNumberInput v-model="formData.door_lock_duration" label="Door Lock Duration" help-text="1-30 seconds"
+            :error="errors.door_lock_duration" :min="1" :max="30" :step="1" required :disabled="isDisabled" />
+        </div>
+      </div>
+
+
+        <!-- System Settings Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-5 lg:col-span-1">
+          <!-- <div class="flex items-center mb-4">
+          <i class="fas fa-cogs text-blue-500 mr-2"></i>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            System Settings
+          </h2>
+        </div> -->
+
+
+          <BaseCheckbox v-model="formData.run_program_without_time" label="Run Program Without Time Check"
+            :disabled="isDisabled" required />
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-5 lg:col-span-1">
+
+          <BaseCheckbox v-model="formData.active" label="System Is Active" :disabled="isDisabled" required />
+        </div>
+
+
     </div>
 
-    <div class="card bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-      <h2
-        class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-4 pb-2 border-b border-blue-100 dark:border-blue-900"
-      >
-        Door Lock Settings
-      </h2>
-
-      <div class="space-y-4">
-        <BaseSelectInput
-          v-model="formData.door_lock_variant"
-          :options="doorLockVariants"
-          label="Door Lock Variant"
-          required
-          :error="errors.door_lock_variant"
-          :disabled="isDisabled"
-        />
-
-        <BaseNumberInput
-          v-model="formData.door_lock_duration"
-          label="Door Lock Duration"
-          help-text="Duration in seconds (1-30 seconds)"
-          :error="errors.door_lock_duration"
-          :min="1"
-          :max="30"
-          :step="1"
-          required
-          :disabled="isDisabled"
-        />
-      </div>
-    </div>
-
-    <div class="card bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-      <h2
-        class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-4 pb-2 border-b border-blue-100 dark:border-blue-900"
-      >
-        System Settings
-      </h2>
-
-      <div class="space-y-4">
-        <BaseCheckbox
-          v-model="formData.run_program_without_time"
-          label="Run Program Without Time Check"
-          :disabled="isDisabled"
-          required
-        />
-
-        <BaseCheckbox
-          v-model="formData.active"
-          label="System Is Active"
-          :disabled="isDisabled"
-          required
-        />
-      </div>
-    </div>
-
-    <button
-      type="submit"
-      :disabled="isLoading || isDisabled || !isValid"
-      class="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      <span v-if="isLoading" class="flex items-center justify-center">
-        <svg
-          class="animate-spin -ml-1 mr-3 h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            class="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            stroke-width="4"
-          ></circle>
-          <path
-            class="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
-        Saving...
-      </span>
+    <!-- Submit Button -->
+    <div class="mt-8 flex justify-end">
+      <button type="submit" :disabled="isLoading || isDisabled || !isValid"
+      class="w-full lg:w-auto lg:px-8 lg:py-3 bg-blue-600 dark:bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[200px]">
+      <template v-if="isLoading">
+      <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+      viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+      </path>
+      </svg>
+      <span>Saving...</span>
+      </template>
       <span v-else>Save Configuration</span>
-    </button>
+      </button>
+    </div>
   </form>
 </template>
