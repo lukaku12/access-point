@@ -40,7 +40,7 @@ const isNumber = (value: number | string): value is number => {
       </svg>
     </button>
 
-    <template v-for="(page, index) in visiblePages" :key="index">
+    <template v-for="page in visiblePages" :key="page">
       <button
         v-if="isNumber(page)"
         @click="emit('page-change', page)"
