@@ -22,6 +22,7 @@ const dashboardNavLinks: NavLink[] = [
     icon: 'i-heroicons-document-text-solid'
   },
   { name: 'Wifi', path: '/wifi', icon: 'i-heroicons-wifi-solid' },
+  { name: 'logs', path: '/logs', icon: 'i-heroicons-list-bullet-solid' },
   { name: 'Config', path: '/config', icon: 'i-heroicons-cog-6-tooth-solid' },
   {
     name: 'Firmware Update',
@@ -97,45 +98,27 @@ const formatDisplayText = (text: string) => {
 </script>
 
 <template>
-  <nav
-    ref="navRef"
-    class="bg-blue-700 text-white rounded-lg mb-6 shadow-md relative dark:bg-gray-800"
-  >
+  <nav ref="navRef" class="bg-blue-700 text-white rounded-lg mb-6 shadow-md relative dark:bg-gray-800">
     <!-- Mobile Menu Button -->
     <div class="flex items-center justify-between p-3 lg:hidden">
-      <button
-        @click="toggleMenu"
-        class="p-2 rounded-md hover:bg-blue-600 transition-colors"
-        aria-label="Toggle menu"
-      >
+      <button @click="toggleMenu" class="p-2 rounded-md hover:bg-blue-600 transition-colors" aria-label="Toggle menu">
         <div v-if="!isMenuOpen" class="i-heroicons-bars-3-solid w-6 h-6"></div>
         <div v-else class="i-heroicons-x-mark-solid w-6 h-6"></div>
       </button>
       <div class="flex items-center gap-2">
-        <button
-          @click="handleThemeToggle"
+        <button @click="handleThemeToggle"
           class="relative w-10 h-10 rounded-md hover:bg-blue-600 transition-all flex items-center justify-center overflow-hidden"
-          aria-label="Toggle theme"
-          :disabled="isAnimating"
-        >
-          <div
-            class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
-            :class="[isDark ? 'translate-y-full' : 'translate-y-0']"
-          >
+          aria-label="Toggle theme" :disabled="isAnimating">
+          <div class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
+            :class="[isDark ? 'translate-y-full' : 'translate-y-0']">
             <div class="i-heroicons-moon-solid w-6 h-6"></div>
           </div>
-          <div
-            class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
-            :class="[isDark ? 'translate-y-0' : '-translate-y-full']"
-          >
+          <div class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
+            :class="[isDark ? 'translate-y-0' : '-translate-y-full']">
             <div class="i-heroicons-sun-solid w-6 h-6"></div>
           </div>
         </button>
-        <button
-          @click="handleLogout"
-          class="p-2 rounded-md hover:bg-blue-600 transition-colors"
-          aria-label="Logout"
-        >
+        <button @click="handleLogout" class="p-2 rounded-md hover:bg-blue-600 transition-colors" aria-label="Logout">
           <div class="i-heroicons-arrow-right-on-rectangle-solid w-6 h-6"></div>
         </button>
       </div>
@@ -144,17 +127,12 @@ const formatDisplayText = (text: string) => {
     <!-- Desktop Navigation -->
     <div class="hidden lg:flex justify-between items-center p-3">
       <div class="flex gap-2">
-        <router-link
-          v-for="link in dashboardNavLinks"
-          :key="link.path"
-          :to="link.path"
-          :class="[
-            'px-4 py-2 rounded-md transition-all flex items-center gap-2',
-            currentRoute === link.path
-              ? 'bg-white text-blue-700'
-              : 'hover:bg-blue-600'
-          ]"
-        >
+        <router-link v-for="link in dashboardNavLinks" :key="link.path" :to="link.path" :class="[
+          'px-4 py-2 rounded-md transition-all flex items-center gap-2',
+          currentRoute === link.path
+            ? 'bg-white text-blue-700'
+            : 'hover:bg-blue-600'
+        ]">
           <div :class="[link.icon, 'text-lg']"></div>
           <span class="text-sm font-medium">
             {{ formatDisplayText(link.name) }}
@@ -162,30 +140,20 @@ const formatDisplayText = (text: string) => {
         </router-link>
       </div>
       <div class="flex items-center gap-2">
-        <button
-          @click="handleThemeToggle"
+        <button @click="handleThemeToggle"
           class="relative w-10 h-10 rounded-md hover:bg-blue-600 transition-all flex items-center justify-center overflow-hidden"
-          aria-label="Toggle theme"
-          :disabled="isAnimating"
-        >
-          <div
-            class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
-            :class="[isDark ? 'translate-y-full' : 'translate-y-0']"
-          >
+          aria-label="Toggle theme" :disabled="isAnimating">
+          <div class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
+            :class="[isDark ? 'translate-y-full' : 'translate-y-0']">
             <div class="i-heroicons-moon-solid w-6 h-6"></div>
           </div>
-          <div
-            class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
-            :class="[isDark ? 'translate-y-0' : '-translate-y-full']"
-          >
+          <div class="absolute inset-0 flex items-center justify-center transition-transform duration-500"
+            :class="[isDark ? 'translate-y-0' : '-translate-y-full']">
             <div class="i-heroicons-sun-solid w-6 h-6"></div>
           </div>
         </button>
-        <button
-          @click="handleLogout"
-          class="px-4 py-2 rounded-md hover:bg-blue-600 transition-all flex items-center gap-2"
-          aria-label="Logout"
-        >
+        <button @click="handleLogout"
+          class="px-4 py-2 rounded-md hover:bg-blue-600 transition-all flex items-center gap-2" aria-label="Logout">
           <div class="i-heroicons-arrow-right-on-rectangle-solid text-lg"></div>
           <span class="text-sm font-medium">Logout</span>
         </button>
@@ -193,31 +161,19 @@ const formatDisplayText = (text: string) => {
     </div>
 
     <!-- Mobile Navigation -->
-    <Transition
-      enter-active-class="transition duration-200 ease-out"
-      enter-from-class="transform -translate-y-4 opacity-0"
-      enter-to-class="transform translate-y-0 opacity-100"
-      leave-active-class="transition duration-200 ease-in"
-      leave-from-class="transform translate-y-0 opacity-100"
-      leave-to-class="transform -translate-y-4 opacity-0"
-    >
-      <div
-        v-show="isMenuOpen"
-        class="lg:hidden absolute left-0 right-0 top-[100%] bg-blue-700 dark:bg-gray-800 rounded-b-lg shadow-lg z-50 border-t border-blue-600 dark:border-gray-700"
-      >
+    <Transition enter-active-class="transition duration-200 ease-out"
+      enter-from-class="transform -translate-y-4 opacity-0" enter-to-class="transform translate-y-0 opacity-100"
+      leave-active-class="transition duration-200 ease-in" leave-from-class="transform translate-y-0 opacity-100"
+      leave-to-class="transform -translate-y-4 opacity-0">
+      <div v-show="isMenuOpen"
+        class="lg:hidden absolute left-0 right-0 top-[100%] bg-blue-700 dark:bg-gray-800 rounded-b-lg shadow-lg z-50 border-t border-blue-600 dark:border-gray-700">
         <div class="p-3 flex flex-col gap-2">
-          <router-link
-            v-for="link in dashboardNavLinks"
-            :key="link.path"
-            :to="link.path"
-            :class="[
-              'px-4 py-3 rounded-md transition-all flex items-center gap-3 justify-center',
-              currentRoute === link.path
-                ? 'bg-white text-blue-700'
-                : 'hover:bg-blue-600'
-            ]"
-            @click="isMenuOpen = false"
-          >
+          <router-link v-for="link in dashboardNavLinks" :key="link.path" :to="link.path" :class="[
+            'px-4 py-3 rounded-md transition-all flex items-center gap-3 justify-center',
+            currentRoute === link.path
+              ? 'bg-white text-blue-700'
+              : 'hover:bg-blue-600'
+          ]" @click="isMenuOpen = false">
             <div :class="[link.icon, 'text-lg']"></div>
             <span class="font-medium">
               {{ formatDisplayText(link.name) }}
@@ -229,13 +185,8 @@ const formatDisplayText = (text: string) => {
   </nav>
 
   <!-- Logout Confirmation Modal -->
-  <BaseModal
-    v-model:show="showLogoutModal"
-    title="Confirm Logout"
-    confirm-text="Logout"
-    @close="showLogoutModal = false"
-    @confirm="confirmLogout"
-  >
+  <BaseModal v-model:show="showLogoutModal" title="Confirm Logout" confirm-text="Logout"
+    @close="showLogoutModal = false" @confirm="confirmLogout">
     <p>Are you sure you want to logout?</p>
   </BaseModal>
 </template>
