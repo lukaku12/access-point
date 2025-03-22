@@ -37,3 +37,15 @@ export const updateConfig = async (
     throw new Error(errorMessage);
   }
 };
+
+export const restartAccessPoint = async (): Promise<void> => {
+  try {
+    const response = await api.post<ApiResponse<void>>('/restart');
+    if (response.data.status !== 'success') {
+      throw new Error('Failed to restart access point');
+    }
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || error.message || 'Failed to restart access point';
+    throw new Error(errorMessage);
+  }
+};

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { getConfig, updateConfig } from '@/api/config';
+import { getConfig, updateConfig, restartAccessPoint } from '@/api/config';
 import type { ConfigPayload, Config } from '@/types/config';
 import ConfigForm from '@/components/forms/ConfigForm.vue';
 import FlashMessage from '@/components/FlashMessage.vue';
+import BaseModal from '@/components/base/BaseModal.vue';
 
 const config = ref<Config>({
   auth_key: '',
@@ -24,6 +25,9 @@ const authKey = ref('');
 
 const isInitialLoading = ref(true); // New ref for initial loading state
 const isSubmitting = ref(false); // New ref for form submission state
+
+const showRestartModal = ref(false);
+const isRestarting = ref(false);
 
 const loadConfig = async () => {
   try {
@@ -86,6 +90,25 @@ const handleSubmit = async (data: { config: ConfigPayload }) => {
     };
   } finally {
     isSubmitting.value = false;
+  }
+};
+
+const handleRestart = async () => {
+  try {
+    isRestarting.value = true;
+    await restartAccessPoint();
+    flash.value = {
+      type: 'success',
+      message: 'Access Point is restarting...'
+    };
+  } catch (err: any) {
+    flash.value = {
+      type: 'error',
+      message: err.message || 'Failed to restart access point'
+    };
+  } finally {
+    isRestarting.value = false;
+    showRestartModal.value = false;
   }
 };
 
@@ -174,14 +197,29 @@ const clearFlash = () => {
       </div>
     </div>
 
-    <ConfigForm
-      v-else
-      :config="config"
-      :current-auth-key="authKey"
-      :is-loading="isSubmitting"
-      :is-disabled="hasError"
-      @submit="handleSubmit"
-      @error="(msg: any) => (flash = { type: 'error', message: msg })"
-    />
+    <div v-else>
+      <ConfigForm
+        :config="config"
+        :current-auth-key="authKey"
+        :is-loading="isSubmitting"
+        :is-disabled="hasError"
+        @submit="handleSubmit"
+        @error="(msg: any) => (flash = { type: 'error', message: msg })"
+        @restart="showRestartModal = true"
+      />
+    </div>
+
+    <BaseModal
+      :show="showRestartModal"
+      title="Restart Access Point"
+      confirm-text="Restart"
+      :loading="isRestarting"
+      @close="showRestartModal = false"
+      @confirm="handleRestart"
+    >
+      <p class="text-gray-600 dark:text-gray-300">
+        Are you sure you want to restart the access point? This will temporarily disconnect all active connections.
+      </p>
+    </BaseModal>
   </div>
 </template>
