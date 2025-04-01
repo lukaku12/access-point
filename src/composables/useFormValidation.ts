@@ -1,11 +1,17 @@
 import { ref, computed } from 'vue';
 
 interface ValidationRule {
-  required?: boolean;
+  required?: boolean | ((value: any) => boolean | string);
   message?: string;
   pattern?: RegExp;
-  validator?: (value: any) => boolean;
+  validator?: (value: any) => boolean | string;
   shouldValidate?: () => boolean;
+  minLength?: (value: any) => boolean | string;
+  range?: (value: any) => boolean | string;
+  format?: (value: any) => boolean | string;
+  greaterThanStart?: (value: any) => boolean | string;
+  // Add a catch-all property for any other validation types
+  [key: string]: any;
 }
 
 export function useFormValidation<T extends Record<string, any>>() {
@@ -15,36 +21,38 @@ export function useFormValidation<T extends Record<string, any>>() {
   const validateField = (
     field: keyof T,
     value: any,
-    rules: ValidationRule[] | Record<string, ValidationRule>
+    rules: ValidationRule[] | Record<string, ValidationRule | ((value: any) => boolean | string)>
   ) => {
     touched.value[field] = true;
     
-    // Convert rules to array if it's not already
-    const rulesArray = Array.isArray(rules) ? rules : Object.values(rules);
-    
-    for (const rule of rulesArray) {
-      // Skip validation if shouldValidate is provided and returns false
-      if (rule.shouldValidate && !rule.shouldValidate()) {
-        continue;
+    // Handle different rule formats
+    if (Array.isArray(rules)) {
+      // Handle array of rules
+      for (const rule of rules) {
+        const result = processRule(rule, value, field);
+        if (result !== true) {
+          errors.value[field] = result;
+          return false;
+        }
       }
-
-      // Check for required
-      if (rule.required && (value === undefined || value === null || value === '' || 
-          (Array.isArray(value) && value.length === 0))) {
-        errors.value[field] = rule.message || `${String(field)} is required`;
-        return false;
-      }
-
-      // Check for pattern
-      if (rule.pattern && typeof value === 'string' && !rule.pattern.test(value)) {
-        errors.value[field] = rule.message || `${String(field)} format is invalid`;
-        return false;
-      }
-
-      // Check for custom validator
-      if (rule.validator && !rule.validator(value)) {
-        errors.value[field] = rule.message || `${String(field)} is invalid`;
-        return false;
+    } else {
+      // Handle object format rules
+      for (const [_, ruleConfig] of Object.entries(rules)) {
+        // If the rule is a function (direct validator), execute it
+        if (typeof ruleConfig === 'function') {
+          const result = ruleConfig(value);
+          if (result !== true) {
+            errors.value[field] = typeof result === 'string' ? result : `${String(field)} is invalid`;
+            return false;
+          }
+        } else if (typeof ruleConfig === 'object' && ruleConfig !== null) {
+          // Process as rule object
+          const result = processRule(ruleConfig as ValidationRule, value, field);
+          if (result !== true) {
+            errors.value[field] = result;
+            return false;
+          }
+        }
       }
     }
 
@@ -52,14 +60,83 @@ export function useFormValidation<T extends Record<string, any>>() {
     return true;
   };
 
+  // Process a rule object
+  const processRule = (rule: ValidationRule, value: any, field: keyof T): true | string => {
+    // Skip validation if shouldValidate is provided and returns false
+    if (rule.shouldValidate && !rule.shouldValidate()) {
+      return true;
+    }
+
+    // Check for required (boolean form)
+    if (rule.required === true && (value === undefined || value === null || value === '' || 
+        (Array.isArray(value) && value.length === 0))) {
+      return rule.message || `${String(field)} is required`;
+    }
+
+    // Check for required (function form)
+    if (typeof rule.required === 'function') {
+      const result = rule.required(value);
+      if (result !== true) {
+        return typeof result === 'string' ? result : `${String(field)} is required`;
+      }
+    }
+
+    // Check for pattern
+    if (rule.pattern && typeof value === 'string' && !rule.pattern.test(value)) {
+      return rule.message || `${String(field)} format is invalid`;
+    }
+
+    // Check for minLength
+    if (typeof rule.minLength === 'function') {
+      const result = rule.minLength(value);
+      if (result !== true) {
+        return typeof result === 'string' ? result : `${String(field)} does not meet minimum length`;
+      }
+    }
+
+    // Check for range
+    if (typeof rule.range === 'function') {
+      const result = rule.range(value);
+      if (result !== true) {
+        return typeof result === 'string' ? result : `${String(field)} is out of range`;
+      }
+    }
+
+    // Check for format
+    if (typeof rule.format === 'function') {
+      const result = rule.format(value);
+      if (result !== true) {
+        return typeof result === 'string' ? result : `${String(field)} format is invalid`;
+      }
+    }
+
+    // Check for greaterThanStart
+    if (typeof rule.greaterThanStart === 'function') {
+      const result = rule.greaterThanStart(value);
+      if (result !== true) {
+        return typeof result === 'string' ? result : `${String(field)} is invalid`;
+      }
+    }
+
+    // Check for custom validator
+    if (rule.validator) {
+      const result = rule.validator(value);
+      if (result !== true) {
+        return typeof result === 'string' ? result : `${String(field)} is invalid`;
+      }
+    }
+
+    return true;
+  };
+
   const validateAll = (
     values: T,
-    rulesMap: Record<keyof T, ValidationRule[]>
+    rulesMap: Record<keyof T, ValidationRule[] | Record<string, ValidationRule | ((value: any) => boolean | string)>>
   ) => {
     let isValid = true;
     
-    for (const [field, rules] of Object.entries(rulesMap) as [keyof T, ValidationRule[]][]) {
-      const fieldIsValid = validateField(field, values[field], rules);
+    for (const field of Object.keys(rulesMap) as Array<keyof T>) {
+      const fieldIsValid = validateField(field, values[field], rulesMap[field]);
       if (!fieldIsValid) {
         isValid = false;
       }

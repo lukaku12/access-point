@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted, computed, nextTick, watch } from 'vue';
 
 interface Props {
-  modelValue: string | number[] | string[];
+  modelValue: string | number | Array<string | number>;
   options: { value: string | number; label: string }[];
   label?: string;
   disabled?: boolean;
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | number[] | string[]): void;
+  (e: 'update:modelValue', value: string | number | Array<string | number>): void;
   (e: 'blur'): void;
 }>();
 
@@ -127,7 +127,7 @@ const handleSelect = (value: string | number) => {
     
     emit('update:modelValue', currentValue);
   } else {
-    emit('update:modelValue', value.toString());
+    emit('update:modelValue', props.options.find(opt => opt.value === value)?.value ?? value);
     isOpen.value = false;
   }
 };
@@ -137,8 +137,9 @@ const getSelectedLabel = computed(() => {
   if (props.multiple && Array.isArray(props.modelValue)) {
     if (props.modelValue.length === 0) return 'Select options';
     
+    const modelValueArray = props.modelValue; // This creates a properly typed reference
     const selectedOptions = props.options
-      .filter(opt => props.modelValue.includes(opt.value))
+      .filter(opt => modelValueArray.includes(opt.value))
       .map(opt => opt.label);
     
     if (selectedOptions.length > 2) {
