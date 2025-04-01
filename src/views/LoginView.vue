@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-[calc(100vh-64px)] flex items-center justify-center bg-gray-100 dark:bg-gray-900"
+    class="min-h-[calc(100vh-64px)] flex items-center justify-center dark:bg-gray-900"
   >
     <div
       class="max-w-md w-full p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg"

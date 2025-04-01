@@ -15,13 +15,19 @@ interface NavLink {
 
 const dashboardNavLinks: NavLink[] = [
   { name: 'Dashboard', path: '/dashboard', icon: 'i-heroicons-home-solid' },
+  { name: 'Wifi', path: '/wifi', icon: 'i-heroicons-wifi-solid' },
   { name: 'Cards', path: '/cards', icon: 'i-heroicons-credit-card-solid' },
   {
     name: 'Card Reads',
     path: '/card-reads',
     icon: 'i-heroicons-document-text-solid'
   },
-  { name: 'Wifi', path: '/wifi', icon: 'i-heroicons-wifi-solid' },
+
+  {
+    name: 'Restart Schedules',
+    path: '/restart-schedules',
+    icon: 'i-heroicons-clock-solid'
+  },
   { name: 'logs', path: '/logs', icon: 'i-heroicons-list-bullet-solid' },
   { name: 'Config', path: '/config', icon: 'i-heroicons-cog-6-tooth-solid' },
   {
@@ -71,6 +77,7 @@ const confirmLogout = () => {
   logout();
   setTimeout(() => {
     router.push({ name: 'landing' });
+    window.location.reload();
   }, 500);
   console.log('Logout confirmed');
   showLogoutModal.value = false;
@@ -100,7 +107,7 @@ const formatDisplayText = (text: string) => {
 <template>
   <nav ref="navRef" class="bg-blue-700 text-white rounded-lg mb-6 shadow-md relative dark:bg-gray-800">
     <!-- Mobile Menu Button -->
-    <div class="flex items-center justify-between p-3 lg:hidden">
+    <div class="flex items-center justify-between p-3 xl:hidden">
       <button @click="toggleMenu" class="p-2 rounded-md hover:bg-blue-600 transition-colors" aria-label="Toggle menu">
         <div v-if="!isMenuOpen" class="i-heroicons-bars-3-solid w-6 h-6"></div>
         <div v-else class="i-heroicons-x-mark-solid w-6 h-6"></div>
@@ -125,7 +132,7 @@ const formatDisplayText = (text: string) => {
     </div>
 
     <!-- Desktop Navigation -->
-    <div class="hidden lg:flex justify-between items-center p-3">
+    <div class="hidden xl:flex justify-between items-center p-3">
       <div class="flex gap-2">
         <router-link v-for="link in dashboardNavLinks" :key="link.path" :to="link.path" :class="[
           'px-4 py-2 rounded-md transition-all flex items-center gap-2',
@@ -166,7 +173,7 @@ const formatDisplayText = (text: string) => {
       leave-active-class="transition duration-200 ease-in" leave-from-class="transform translate-y-0 opacity-100"
       leave-to-class="transform -translate-y-4 opacity-0">
       <div v-show="isMenuOpen"
-        class="lg:hidden absolute left-0 right-0 top-[100%] bg-blue-700 dark:bg-gray-800 rounded-b-lg shadow-lg z-50 border-t border-blue-600 dark:border-gray-700">
+        class="xl:hidden absolute left-0 right-0 top-[100%] bg-blue-700 dark:bg-gray-800 rounded-b-lg shadow-lg z-50 border-t border-blue-600 dark:border-gray-700">
         <div class="p-3 flex flex-col gap-2">
           <router-link v-for="link in dashboardNavLinks" :key="link.path" :to="link.path" :class="[
             'px-4 py-3 rounded-md transition-all flex items-center gap-3 justify-center',

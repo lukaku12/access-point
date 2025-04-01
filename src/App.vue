@@ -18,7 +18,7 @@ const currentRoute = computed(() => (route.name as string) || '');
     }"
     class="h-full bg-gray-50 dark:bg-gray-900 transition-colors duration-200"
   >
-    <div class="font-sans antialiased p-8 max-w-7xl mx-auto h-full">
+    <div class="font-sans antialiased p-8 max-w-[90rem] mx-auto h-full">
       <!-- Navbar stays at top -->
       <NavBar v-if="!hideNavbar" :active-route="currentRoute" />
 

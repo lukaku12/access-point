@@ -18,8 +18,9 @@ export function usePagination(initialState: Partial<PaginationState> = {}) {
 
   const getVisiblePages = computed(() => {
     const delta = 2;
-    const range: (number | string)[] = []; // Add explicit type
-    const { totalPages, currentPage } = state.value;
+    const range: (number | string)[] = [];
+    const totalPages = state.value.totalPages;
+    const currentPage = state.value.currentPage;
 
     for (
       let i = Math.max(2, currentPage - delta);
