@@ -21,6 +21,7 @@ export interface SystemInfo {
   cpu_freq: number;
   uptime: string;
   timestamp: number;
+  firmware_version: string;
 }
 
 export interface HeapInfo {

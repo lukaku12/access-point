@@ -17,7 +17,8 @@ const stats = ref<DashboardApiResponse>({
   system: {
     cpu_freq: 0,
     uptime: 'N/A',
-    timestamp: 0
+    timestamp: 0,
+    firmware_version: 'N/A'
   },
   heap: {
     free: '',
@@ -168,6 +169,13 @@ onUnmounted(() => {
               <span class="stat-label dark:text-gray-300">Flash Speed:</span>
               <span class="stat-value dark:text-gray-100">{{
                 stats.storage.flash.speed
+              }}</span>
+            </div>
+
+            <div class="stat-row">
+              <span class="stat-label dark:text-gray-300">Firmware Version:</span>
+              <span class="stat-value dark:text-gray-100">{{
+                stats.system.firmware_version
               }}</span>
             </div>
           </div>
