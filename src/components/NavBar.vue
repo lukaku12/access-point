@@ -22,12 +22,11 @@ const dashboardNavLinks: NavLink[] = [
     path: '/card-reads',
     icon: 'i-heroicons-document-text-solid'
   },
-
-  {
-    name: 'Restart Schedules',
-    path: '/restart-schedules',
-    icon: 'i-heroicons-clock-solid'
-  },
+  // {
+  //   name: 'Restart Schedules',
+  //   path: '/restart-schedules',
+  //   icon: 'i-heroicons-clock-solid'
+  // },
   { name: 'logs', path: '/logs', icon: 'i-heroicons-list-bullet-solid' },
   { name: 'Config', path: '/config', icon: 'i-heroicons-cog-6-tooth-solid' },
   {

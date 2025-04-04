@@ -14,7 +14,9 @@ export const fetchWiFiNetworks = () => {
 };
 
 export const createWiFiNetwork = (network: WiFiCredentials) => {
-  return api.post<CreateWiFiResponse>('/wifi-credentials', network);
+  return api.post<CreateWiFiResponse>('/wifi-credentials', {
+    credentials: network
+  });
 };
 
 export const updateWiFiNetwork = (

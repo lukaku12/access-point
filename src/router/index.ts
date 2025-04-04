@@ -82,15 +82,15 @@ const routes: RouteRecordRaw[] = [
       subtitle: 'Update Device Firmware'
     }
   },
-  {
-    path: '/restart-schedules',
-    name: 'restart-schedules',
-    component: () => import('@/views/RestartSchedulesView.vue'),
-    meta: {
-      title: 'Restart Schedules',
-      subtitle: 'Manage Device Restart Schedules'
-    }
-  },
+  // {
+  //   path: '/restart-schedules',
+  //   name: 'restart-schedules',
+  //   component: () => import('@/views/RestartSchedulesView.vue'),
+  //   meta: {
+  //     title: 'Restart Schedules',
+  //     subtitle: 'Manage Device Restart Schedules'
+  //   }
+  // },
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
